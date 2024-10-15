@@ -1,0 +1,8 @@
+{
+  "/admin/projet/[id]/page": "app/admin/projet/[id]/page.js",
+  "/new-compte/page": "app/new-compte/page.js",
+  "/admin/projet/page": "app/admin/projet/page.js",
+  "/admin/tache/[id]/page": "app/admin/tache/[id]/page.js",
+  "/admin/tache/new-tache/[id]/page": "app/admin/tache/new-tache/[id]/page.js",
+  "/admin/calendrier/page": "app/admin/calendrier/page.js"
+}
