@@ -1,9 +1,9 @@
 {
   "pages": {
-    "/admin/configuration/page": [
+    "/admin/projet/[id]/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/configuration/page.js"
+      "static/chunks/app/admin/projet/[id]/page.js"
     ],
     "/admin/layout": [
       "static/chunks/webpack.js",
@@ -11,86 +11,16 @@
       "static/css/app/admin/layout.css",
       "static/chunks/app/admin/layout.js"
     ],
-    "/admin/configuration/news-comptes/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/configuration/news-comptes/[id]/page.js"
-    ],
     "/admin/projet/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
       "static/chunks/app/admin/projet/page.js"
     ],
-    "/admin/projet/[id]/page": [
+    "/admin/projet/new/page": [
       "static/chunks/webpack.js",
       "static/chunks/main-app.js",
-      "static/chunks/app/admin/projet/[id]/page.js"
-    ],
-    "/admin/dashboard/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/dashboard/page.js"
-    ],
-    "/admin/calendrier/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/calendrier/page.js"
-    ],
-    "/admin/gantt/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/gantt/page.js"
-    ],
-    "/admin/resources/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/admin/resources/page.js"
-    ],
-    "/admin/projet/new-project/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/admin/projet/new-project/page.css",
-      "static/chunks/app/admin/projet/new-project/page.js"
-    ],
-    "/admin/projet/new-project/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/admin/projet/new-project/[id]/page.css",
-      "static/chunks/app/admin/projet/new-project/[id]/page.js"
-    ],
-    "/(login)/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/(login)/page.js"
-    ],
-    "/(login)/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/(login)/layout.css",
-      "static/chunks/app/(login)/layout.js"
-    ],
-    "/new-compte/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/chunks/app/new-compte/page.js"
-    ],
-    "/new-compte/layout": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/new-compte/layout.css",
-      "static/chunks/app/new-compte/layout.js"
-    ],
-    "/admin/tache/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/admin/tache/[id]/page.css",
-      "static/chunks/app/admin/tache/[id]/page.js"
-    ],
-    "/admin/tache/new-tache/[id]/page": [
-      "static/chunks/webpack.js",
-      "static/chunks/main-app.js",
-      "static/css/app/admin/tache/new-tache/[id]/page.css",
-      "static/chunks/app/admin/tache/new-tache/[id]/page.js"
+      "static/css/app/admin/projet/new/page.css",
+      "static/chunks/app/admin/projet/new/page.js"
     ]
   }
 }

@@ -24,6 +24,7 @@ import { ActionDTO } from '@/app/interfaces/ActionDTO';
 import DetailCalendarModal from '@/app/components/Modal/DetailCalendarModal';
 import { getCalendarsData } from '@/app/services/CalendarsServices';
 import { getActionsByTaskId } from '@/app/services/TaskActionServices';
+import Drawer from '@/app/components/Drawer/Drawer';
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
 
@@ -67,6 +68,13 @@ const groupTasksByDate = (tasks: TaskDataCalendar[]) => {
 };
 
 export default function Page() {
+
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+    const closeDrawer = () => {
+        setIsDrawerOpen(false);
+    };
 
     const router = useRouter();
     const [tasks, setTasks] = useState<TaskDataCalendar[]>([]);
@@ -131,7 +139,7 @@ export default function Page() {
         });
         setSelectedTasks(tasksWithSameDates);
         console.log('Tasks with same dates:', tasksWithSameDates);
-
+        setIsDrawerOpen(true);
         scrollToBottom();
 
     };
@@ -192,7 +200,7 @@ export default function Page() {
                                 const hasMultipleTasks = groupedTasks[groupedKey]?.length > 1;
 
                                 return (
-                                    <td key={colIndex} className={`relative h-20 cursor-pointer border border-stroke p-2 transition duration-500 hover:bg-gray dark:border-strokedark dark:hover:bg-meta-4 ${isCurrentDay ? 'bg-blue-100' : ''}`}>
+                                    <td key={colIndex} className={`relative h-20 cursor-pointer border border-stroke p- transition duration-500 hover:bg-gray dark:border-strokedark dark:hover:bg-meta-4 ${isCurrentDay ? 'bg-blue-100' : ''}`}>
                                         {isDateInMonth && day !== null && (
                                             <>
                                                 <span className="font-medium text-black dark:text-white">
@@ -206,10 +214,17 @@ export default function Page() {
 
                                                 ) : (
                                                     tasksForDay.map(task => (
-                                                        <div key={task.taskId} className="absolute left-2 top-1 flex w-full flex-col rounded-sm border-l-[3px] bg-gray px-3 py-1 text-left" style={{ borderColor: getRandomColor() }}>
-                                                            <span onClick={() => openModalCalendar(task)} className="vuetext-[11px] font-semibold text-black dark:text-white">
+                                                        // <div key={task.taskId} className="absolute left-2 top-1 flex w-full flex-col rounded-sm border-l-[3px] bg-gray px-3 py-1 text-left" style={{ borderColor: getRandomColor() }}>
+                                                        <div key={task.taskId} className="absolute left-2 top-1 flex w-full flex-col rounded-sm bg-gray px-3 py-1 text-left">
+
+                                                            <span
+                                                                onClick={() => openModalCalendar(task)}
+                                                                className="vuetext-[11px] font-semibold text-black dark:text-white truncate"
+                                                                style={{ backgroundColor: getRandomColor() }}
+                                                            >
                                                                 {task.taskName}
                                                             </span>
+
                                                         </div>
                                                     ))
                                                 )}
@@ -296,7 +311,13 @@ export default function Page() {
                         {renderCalendar()}
                     </div>
 
-                    {selectedTasks.length > 0 && (
+
+                    {/* Drawer Component avec selectedTasks et openModalCalendar */}
+                    <Drawer isOpen={isDrawerOpen} onClose={closeDrawer} selectedTasks={selectedTasks} openModalCalendar={openModalCalendar} />
+
+
+                    {/* {selectedTasks.length > 0 && (
+
                         <div className="p-4 mt-4 border border-white bg-white rounded">
                             <h2 className="text-xl font-semibold">Tâches avec les mêmes dates :</h2>
                             <ul>
@@ -317,7 +338,7 @@ export default function Page() {
                                 ))}
                             </ul>
                         </div>
-                    )}
+                    )} */}
 
                 </div>
 

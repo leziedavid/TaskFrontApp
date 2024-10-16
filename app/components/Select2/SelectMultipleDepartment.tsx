@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { BaseResponse } from '../../interfaces/ApiResponse';
@@ -38,8 +39,9 @@ const SelectDepartment: React.FC<SelectDepartmentProps> = ({ setDepartment, depa
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    // document.addEventListener('mousedown', handleClickOutside);
+    // return () => document.removeEventListener('mousedown', handleClickOutside);
+
   }, []);
 
   const handleToggleDropdown = () => {

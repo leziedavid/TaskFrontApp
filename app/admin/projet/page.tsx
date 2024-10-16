@@ -232,7 +232,7 @@ export default function Page() {
 
                     {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
                         <button
-                            onClick={() => navigateTo(`/admin/projet/new-project`)}
+                            onClick={() => navigateTo(`/admin/projet/new`)}
                             className="flex items-center text-white rounded-lg bg-[#012340] py-2 px-6 font-medium text-gray hover:bg-opacity-90"
                             type="button"
                         >
@@ -247,7 +247,9 @@ export default function Page() {
                 <div className="mt-3">
 
                     <div className="flex justify-between items-end mb-4">
-
+                    
+                    {response && response.length ? (
+                        
                         <button onClick={toggleDropdown} className={`flex space-x-2 justify-center rounded-lg border border-[#012340] py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white
                             ${isOpen ? 'bg-[#012340]' : 'bg-white'}`}
                             type="button" >
@@ -261,6 +263,7 @@ export default function Page() {
 
                             <span className={` text-sm font-medium ${isOpen ? 'text-white' : ''}`}> FILTRE</span>
                         </button>
+                        ) : null}
 
                         {modes == "Liste" ? (
 

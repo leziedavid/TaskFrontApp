@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
 
+import React, { useEffect, useState } from 'react';
 interface SelectGenreProps {
   setGenre: React.Dispatch<React.SetStateAction<string>>;
   genres: string;

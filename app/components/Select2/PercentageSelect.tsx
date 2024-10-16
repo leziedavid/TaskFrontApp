@@ -1,5 +1,5 @@
-import React, { FC, useState, useRef, useEffect } from 'react';
 
+import React, { FC, useState, useRef, useEffect } from 'react';
 interface PercentageSelectProps {
     value: string;
     onChange: (value: string) => void;

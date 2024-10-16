@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import ProjectStatisticsChart from './ProjectStatisticsChart';
 import TaskStatisticsChart from './TaskStatisticsChart';
 import UserStatisticsChart from './UserStatisticsChart';
@@ -20,6 +20,7 @@ interface StatsProps {
 }
 
 const StatisticsDashboard: React.FC<StatsProps> = ({
+
     totalProjectsPending,
     totalProjectsCompleted,
     totalProjectsInProgress,
@@ -29,26 +30,53 @@ const StatisticsDashboard: React.FC<StatsProps> = ({
     totalFemme,
     totalHomme
 }) => {
+
+
+    const [authorisation, setAuthorisation] = useState<string | null>(null);
+    useEffect(() => {
+        const auth = localStorage.getItem('authorisation');
+        setAuthorisation(auth);
+    }, []);
+
+
+
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 p-2 px-0">
             {/* Carte des statistiques de projets */}
-            <ProjectStatisticsChart
-            
-                totalProjectsInProgress={totalProjectsInProgress}
-                totalProjectsPending={totalProjectsPending}
-                totalProjectsCompleted={totalProjectsCompleted}/>
+            {totalProjectsInProgress > 0 &&
+                totalProjectsPending > 0 &&
+                totalProjectsCompleted > 0 && (
+                    <ProjectStatisticsChart
+                        totalProjectsInProgress={totalProjectsInProgress}
+                        totalProjectsPending={totalProjectsPending}
+                        totalProjectsCompleted={totalProjectsCompleted}
+                    />
+                )}
 
             {/* Carte des statistiques de tâches */}
-            <TaskStatisticsChart
-                totalTasksInProgress={totalTasksInProgress}
-                totalTasksPending={totalTasksPending}
-                totalTasksCompleted={totalTasksCompleted}
-            />
-            {/* Carte des statistiques de tâches */}
-            <UserStatisticsChart
-                totalFemme={totalFemme}
-                totalHomme={totalHomme}
-            />
+            {totalTasksInProgress > 0 &&
+                totalTasksPending > 0 &&
+                totalTasksCompleted > 0 && (
+                    <TaskStatisticsChart
+                        totalTasksInProgress={totalTasksInProgress}
+                        totalTasksPending={totalTasksPending}
+                        totalTasksCompleted={totalTasksCompleted}
+                    />
+                )}
+
+            {/* Carte des statistiques d'utilisateurs */}
+            {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
+
+                totalFemme > 0 &&
+                totalHomme > 0 && (
+                    <UserStatisticsChart
+                        totalFemme={totalFemme}
+                        totalHomme={totalHomme}
+                    />
+                )
+
+            ) : null}
+
         </div>
     );
 };

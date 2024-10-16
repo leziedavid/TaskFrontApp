@@ -166,7 +166,7 @@ export default function Page() {
                                 </div>
 
                                 <div className="text-sm">
-                                    <Link href="/new-compte" className="font-medium text-black hover:text-black">
+                                    <Link href="/new" className="font-medium text-black hover:text-black">
                                         Vous n&apos;avez pas de compte ? <span className=" text-blue-500 px-1">Créez un compte</span>
                                     </Link>
                                 </div>
