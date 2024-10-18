@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { ResponseRessource } from '../../interfaces/Ressource';
 import { formatDate } from '../../services/DateUtils';
@@ -34,10 +36,6 @@ const ComposeMenu: React.FC<ComposeMenuProps> = ({ projects, nomUsers }) => {
     const toggleMenu = () => {
         setIsOpen((prev) => !prev);
     };
-
-    // const handleProjectClick = (index: number) => {
-    //     setSelectedProjectIndex(selectedProjectIndex === index ? null : index);
-    // };
 
     const handleProjectClick = (index: number) => {
         // setSelectedProjectIndex(selectedProjectIndex === index ? null : index);

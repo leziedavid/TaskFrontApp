@@ -1,3 +1,4 @@
+"use client";
 
 import React, { useEffect, useRef, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -22,6 +23,7 @@ const SelectAllUsersByRessource: React.FC<SelectAllUsersByRessourceProps> = ({ s
   const selectRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    setSelectedUser(null);
     const fetchUsers = async () => {
       try {
         if (departementId) {

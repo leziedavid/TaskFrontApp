@@ -1,3 +1,4 @@
+"use client";
 
 import React, { useState, useEffect, useRef } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -39,8 +40,6 @@ const SelectDepartment: React.FC<SelectDepartmentProps> = ({ setDepartment, depa
       }
     };
 
-    // document.addEventListener('mousedown', handleClickOutside);
-    // return () => document.removeEventListener('mousedown', handleClickOutside);
 
   }, []);
 

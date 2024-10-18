@@ -1,3 +1,4 @@
+"use client";
 
 
 import SelectDepartment from '../Select2/SelectDepartment';

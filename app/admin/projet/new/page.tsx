@@ -1,18 +1,16 @@
 "use client";
 
-import React, { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic';
-
-import Image from 'next/image';
-import toast, { Toaster } from 'react-hot-toast';
-import { Project } from '@/app/interfaces/Global';
 import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
 
 import FileUpload from '@/app/components/FileUpload';
-import QuillEditor from '@/app/components/QuillEditor';
+const QuillEditor = dynamic(() => import('@/app/components/QuillEditor'), {
+    ssr: false,
+});
 import TableUsersSelecte from '@/app/components/tabs/TableUsersSelecte';
 
-import {differenceInDays } from 'date-fns';
+import { differenceInDays } from 'date-fns';
 import { parseISO } from 'date-fns/parseISO';
 
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
@@ -22,22 +20,17 @@ import { Users } from '@/app/interfaces/Users';
 import { UserState } from '@/app/interfaces/UserState';
 
 // import Loading from '../../common/Loader/Loading';
-import { SaveProject } from '@/app/services/ProjectService';
-import { getUserIdFromToken } from '@/app/services/ApiService';
 import { Department } from '@/app/interfaces/Department';
-
-// const SelectMultipleDepartment = dynamic(() => import('@/app/components/Select2/SelectMultipleDepartment'), {ssr: false,});
-// const SelectUsersFilter = dynamic(() => import('@/app/components/Select2/SelectUsersFilter'), {ssr: false,});
-// const SelectPriorite2 = dynamic(() => import('@/app/components/Select2/SelectPriorite2'), {ssr: false,});
-// const SelectState2 = dynamic(() => import('@/app/components/Select2/SelectState2'), {ssr: false,});
+import { getUserIdFromToken } from '@/app/services/ApiService';
+import { SaveProject } from '@/app/services/ProjectService';
 
 
 import SelectMultipleDepartment from '@/app/components/Select2/SelectMultipleDepartment';
-import SelectUsersFilter from '@/app/components/Select2/SelectUsersFilter';
 import SelectPriorite2 from '@/app/components/Select2/SelectPriorite2';
 import SelectState2 from '@/app/components/Select2/SelectState2';
+import SelectUsersFilter from '@/app/components/Select2/SelectUsersFilter';
+import dynamic from 'next/dynamic';
 
-import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
 export default function Page() {
@@ -60,9 +53,7 @@ export default function Page() {
     const [Departments, setDepartment]  = useState<string[]>([]);
     const [dataDepartment, setDataDepartment] = useState<Department[]>([]);
     const [Users, setUsers] =  useState<string[]>([]);
-    
-    const [userid, setUserid] = useState(localStorage.getItem('token'));
-    const [Tablegenerate, setTablegenerate] = useState<Users[]>([]);
+        const [Tablegenerate, setTablegenerate] = useState<Users[]>([]);
     const [DataGenerated, setDataGenerated] = useState<UserState>({usersId: [], leaderId: 0  });
     const [Load, SetLoad] = useState(false);
     const [titles, setTitles] = useState('');
@@ -173,7 +164,7 @@ export default function Page() {
                 SetLoad(false);
                 toast.error("Erreur lors de la création du projet. Veuillez réessayer.");
             }
-    }, [response, history,dateDebut, dateFin]);
+    }, [response,dateDebut, dateFin]);
 
     const AddData = async () => {
 
@@ -275,7 +266,7 @@ export default function Page() {
                         <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
                             <h1 className="text-2xl font-semibold text-gray-900">Ajouter un nouveau projet</h1>
                         </div>
-
+                        
                         <div className="p-7">
 
                             <form>

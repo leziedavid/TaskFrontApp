@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { getProjectUsers} from '../../services/ProjectService'
 import {ProjectsDetails,User } from '../../interfaces/Global';

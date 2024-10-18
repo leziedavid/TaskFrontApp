@@ -1,3 +1,4 @@
+"use client";
 
 import React, { FC, useState, useRef, useEffect } from 'react';
 interface PercentageSelectProps {
@@ -38,9 +39,7 @@ const PercentageSelect: FC<PercentageSelectProps> = ({ value, onChange }) => {
                 setDropdownOpen(false);
             }
         };
-
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
+        
     }, []);
 
     return (

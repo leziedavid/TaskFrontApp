@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import { deleteUser, getAllUsersService2, updateUsersRoles } from '../../services/UsersService';

@@ -408,9 +408,10 @@ export default function Page() {
                         </div>
 
                     </div>
-
+                </form>
+                
                     <div className="flex justify-end gap-4.5 space-x-2">
-                        <button onClick={lastePage} className="flex justify-center  bg-gray-3 rounded border border-stroke py-2 px-4 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white" type="submit" >
+                        <button onClick={() => navigateTo(`/admin/configuration`)} className="flex justify-center  bg-gray-3 rounded border border-stroke py-2 px-4 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white" type="submit" >
                             Annuler
                         </button>
 
@@ -420,7 +421,7 @@ export default function Page() {
 
                     </div>
 
-                </form>
+
 
             </div>
 

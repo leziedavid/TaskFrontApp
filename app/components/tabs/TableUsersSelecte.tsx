@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
 import { Users } from '@/app/interfaces/Users';

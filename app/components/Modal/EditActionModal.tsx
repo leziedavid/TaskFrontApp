@@ -1,3 +1,6 @@
+
+"use client";
+
 import { differenceInDays } from 'date-fns';
 import { parseISO } from 'date-fns/parseISO';
 import React, { useEffect, useState } from 'react';
