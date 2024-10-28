@@ -601,10 +601,6 @@ export default function Page() {
                                                                     <span className="font-bold">ANNULER L&apos;OPÉRATION</span>
                                                                 </button>
 
-                                                                <button onClick={() => handleAddFiles(0)} className="font-medium text-white rounded-lg border bg-[#012340] py-2 px-6 flex items-center">
-                                                                    <span className="font-bold">AJOUTER LE FICHIER </span>
-                                                                </button>
-
                                                             </div>
                                                         </div>
 

@@ -4,8 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { FileObject } from '../../interfaces/FileObject';
 
 import toast, { Toaster } from 'react-hot-toast';
-
-import FileUploadTow from '../FileUpload';
+import FileUpload2 from '../FileUpload2';
 
 // services
 interface AddFilesCardProps {
@@ -39,7 +38,7 @@ const AddFilesCard: React.FC<AddFilesCardProps> = ({fetchProjectDetails,id}) => 
             <label className="mb-4.5 block text-lg font-medium text-black dark:text-white"> FICHIERS </label>
 
                 <div className="mb-5">
-                    <FileUploadTow
+                    <FileUpload2
                         id={id ||""}
                         titles={titles}
                         setTitles={setTitles}
@@ -47,7 +46,7 @@ const AddFilesCard: React.FC<AddFilesCardProps> = ({fetchProjectDetails,id}) => 
                         setFile={setFile}
                         fileObjects={fileObjects}
                         setFileObjects={setFileObjects}
-                        // fetchProjectDetails={fetchProjectDetails}
+                        fetchProjectDetails={fetchProjectDetails}
                     />
                 </div>
             </section>
