@@ -9,7 +9,7 @@ import Image from 'next/image';
 import DataNotFound from '@/app/components/error/DataNotFound';
 
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
-import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
+import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon, ArrowLeftIcon } from 'lucide-react';
 import { TaskDetailsDTO } from '@/app/interfaces/ModelsTask';
 import { removeAction, updateActionStatus } from '@/app/services/TaskActionServices';
 import { fetchTaskDetails } from '@/app/services/TaskService';
@@ -37,7 +37,6 @@ export default function Page() {
     const navigateTo = (path: string) => {
         router.push(path);
     };
-
 
 
     const [currentPage, setCurrentPage] = useState<number>(1); // Page actuelle
@@ -196,13 +195,17 @@ export default function Page() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/tache/${localStorage.getItem('tacheId')}`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" />
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Liste des actions</h1>
+            </div>
+
             <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
                 <div className=" mb-10 col-span-5 xl:col-span-3">
                     <div className="rounded-sm  bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-
-                        <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                            <h1 className="text-2xl font-semibold text-gray-900">Liste des actions sur la tâche</h1>
-                        </div>
 
                         <div className="p-7">
                             

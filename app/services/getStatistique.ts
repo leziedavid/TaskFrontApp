@@ -8,6 +8,10 @@ import { getBaseUrl } from "./baseUrl";
 export const getStatistique = async (): Promise<BaseResponse<any>> => {
     
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
+    // tdl
+    console.log(userId);
 
     try {
         const response = await fetch(`${getBaseUrl()}/statistique/global`,
@@ -16,6 +20,8 @@ export const getStatistique = async (): Promise<BaseResponse<any>> => {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
                 },
             }
         );
@@ -35,6 +41,8 @@ export const getStatistique = async (): Promise<BaseResponse<any>> => {
 export const getProjectState = async (): Promise<BaseResponse<any>> => {
     
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
         const response = await fetch(`${getBaseUrl()}/statistique/projetStats`,
@@ -43,6 +51,8 @@ export const getProjectState = async (): Promise<BaseResponse<any>> => {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
                 },
             }
         );

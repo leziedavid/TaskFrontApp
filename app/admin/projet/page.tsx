@@ -19,6 +19,7 @@ import { Toaster } from 'react-hot-toast';
 import { Project } from '@/app/interfaces/Global';
 import { Department } from '@/app/interfaces/Department';
 import { useRouter } from 'next/navigation';
+import NoteFound from '@/app/components/error/NoteFound';
 
 const PAGE_SIZE = 10; // Nombre de trajets par page
 export default function Page() {
@@ -184,17 +185,18 @@ export default function Page() {
     return (
         <>
             <Toaster position="top-right" reverseOrder={false} />
-
             <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">Liste des projtes { users} </h1>
+                <h1 className="text-2xl font-bold text-gray-900 uppercase">Liste des projets {users}</h1>
             </div>
+
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 py-2">
 
-                <div className="border-stroke py-3 dark:border-strokedark sm:px-6 xl:px-7.5 flex justify-between items-center">
-                    <nav>
+                <div className="border-stroke py-3 dark:border-strokedark sm:px-6 xl:px-7.5 flex flex-col sm:flex-row justify-between items-start sm:items-center">
+
+                    <nav className="w-full sm:w-auto">
                         <ol className="flex flex-wrap items-center gap-3">
-                            <li style={activeItem === 0 ? { borderBottom: '2px solid white ' } : {}}>
+                            <li style={activeItem === 0 ? { borderBottom: '2px solid white' } : {}}>
                                 <button className="flex items-center gap-3 font-medium" onClick={() => handleItemClick(0)}>
                                     <span className="hover:text-black font-medium text-sm">TOUS</span>
                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#000000] mb-1">
@@ -202,8 +204,7 @@ export default function Page() {
                                     </div>
                                 </button>
                             </li>
-                            {/* Répétez pour les autres éléments de la liste */}
-                            <li style={activeItem === 1 ? { borderBottom: '2px solid white ' } : {}}>
+                            <li style={activeItem === 1 ? { borderBottom: '2px solid white' } : {}}>
                                 <button className="flex items-center gap-3 font-medium" onClick={() => handleItemClick(1)}>
                                     <span className="hover:text-black text-sm font-medium">EN COURS</span>
                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#D96941] mb-1">
@@ -211,7 +212,7 @@ export default function Page() {
                                     </div>
                                 </button>
                             </li>
-                            <li style={activeItem === 2 ? { borderBottom: '2px solid white ' } : {}}>
+                            <li style={activeItem === 2 ? { borderBottom: '2px solid white' } : {}}>
                                 <button className="flex items-center gap-3 font-medium" onClick={() => handleItemClick(2)}>
                                     <span className="hover:text-black text-sm font-medium">EN ATTENTES</span>
                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#033F73] mb-1">
@@ -219,7 +220,7 @@ export default function Page() {
                                     </div>
                                 </button>
                             </li>
-                            <li style={activeItem === 3 ? { borderBottom: '2px solid white ' } : {}}>
+                            <li style={activeItem === 3 ? { borderBottom: '2px solid white' } : {}}>
                                 <button className="flex items-center gap-3 font-medium" onClick={() => handleItemClick(3)}>
                                     <span className="hover:text-black text-sm font-medium">TERMINES</span>
                                     <div className="flex h-6 w-6 items-center justify-center rounded-full bg-[#2E5902] mb-1">
@@ -233,16 +234,18 @@ export default function Page() {
                     {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
                         <button
                             onClick={() => navigateTo(`/admin/projet/new`)}
-                            className="flex items-center text-white rounded-lg bg-[#012340] py-2 px-6 font-medium text-gray hover:bg-opacity-90"
+                            className="flex items-center text-white rounded-lg bg-[#012340] py-2 px-4 sm:px-6 font-medium text-gray hover:bg-opacity-90 whitespace-nowrap mt-3 sm:mt-0"
                             type="button"
                         >
-                            <svg className="fill-current" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg className="fill-current mr-2" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M15 7H9V1C9 0.4 8.6 0 8 0C7.4 0 7 0.4 7 1V7H1C0.4 7 0 7.4 0 8C0 8.6 0.4 9 1 9H7V15C7 15.6 7.4 16 8 16C8.6 16 9 15.6 9 15V9H15C15.6 9 16 8.6 16 8C16 7.4 15.6 7 15 7Z" fill=""></path>
                             </svg>
                             <span className="text-sm font-medium">AJOUTER UN PROJET</span>
                         </button>
                     ) : null}
+
                 </div>
+
 
                 <div className="mt-3">
 
@@ -347,7 +350,7 @@ export default function Page() {
                                 )
 
                                 ) : (
-                                    <DataNotFound />
+                                    <NoteFound />
                                 )}
 
                                 {response && response.length ? (

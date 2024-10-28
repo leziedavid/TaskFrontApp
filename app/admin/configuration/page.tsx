@@ -56,11 +56,11 @@ export default function Page() {
             <Toaster position="top-right" reverseOrder={false} />
 
             <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8 mb-3">
-                <h1 className="text-2xl font-semibold text-gray-900">PARAMETTRE DE L&apos;APPLICATION</h1>
+                <h1 className="text-2xl font-bold text-gray-900">PARAMETTRE DE L&apos;APPLICATION</h1>
             </div>
 
             <div className="border px-20 bg-white border-white dark:border-gray-700 mb-10">
-                <ul className="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+                <ul className="flex flex-wrap -mb-px text-sm font-bold text-center text-gray-500 dark:text-gray-400">
                     <Tab id="compte" title="UTULISATEURS"
                         icon={
                             <svg className="w-4 h-4 me-2 text-gray-400 group-hover:text-gray-500 dark:text-gray-500 dark:group-hover:text-gray-300" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">

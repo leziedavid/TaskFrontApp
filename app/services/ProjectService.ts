@@ -111,9 +111,11 @@ export const addNewsFile = async (data: FormData): Promise<BaseResponse<any>> =>
 export const getAllProjects = async (
     page: number = 0,
     size: number = 10,
-    sortBy: string = 'projectCreatedAt'
+    sortBy: string = 'projectId'
 ): Promise<BaseResponse<any>> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     // Construire l'URL avec les paramètres de pagination et de tri
     const url = new URL(`${getBaseUrl()}/projects/getAllProjects`);
@@ -127,6 +129,8 @@ export const getAllProjects = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         
@@ -146,9 +150,11 @@ export const searchProjects = async (
     projectName?: string,
     page: number = 0,
     size: number = 10,
-    sortBy: string = 'projectCreatedAt'
+    sortBy: string = 'projectId'
 ): Promise<BaseResponse<Project[]>> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     // Construire l'URL avec les paramètres de recherche, pagination et tri
     const url = new URL(`${getBaseUrl()}/projects/search`);
@@ -165,6 +171,8 @@ export const searchProjects = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         
@@ -182,6 +190,9 @@ export const searchProjects = async (
 
 export const getAllProjects2 = async () => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
+
     try {
         
         const response = await fetch(`${getBaseUrl()}/projects/getAllProjects`, {
@@ -189,6 +200,8 @@ export const getAllProjects2 = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         
@@ -204,6 +217,8 @@ export const getAllProjects2 = async () => {
 
 export const projectsStatistics = async () => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
     try {
         
         const response = await fetch(`${getBaseUrl()}/projects/statistics`, {
@@ -211,6 +226,8 @@ export const projectsStatistics = async () => {
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         
@@ -403,10 +420,12 @@ export const getFilteredProjects = async (
     endDate?: string,
     page: number = 0,   // Ajoutez le paramètre de pagination
     size: number = 10,   // Ajoutez le paramètre de taille de page
-    sortBy: string = 'projectCreatedAt'
+    sortBy: string = 'projectId'
     
 ): Promise<BaseResponse<any>> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
         const params = new URLSearchParams();
@@ -428,6 +447,8 @@ export const getFilteredProjects = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         
@@ -454,6 +475,8 @@ export const getFilteredProjects2 = async (
 ): Promise<BaseResponse<Project[]>> => {
     // Assurez-vous que le type est BaseResponse<Project[]>
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
     
     try {
         const params = new URLSearchParams();
@@ -471,6 +494,8 @@ export const getFilteredProjects2 = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         if (!response.ok) {
@@ -486,6 +511,7 @@ export const getFilteredProjects2 = async (
 
 export const getAllProjectsEndTaskByUserId = async ( userId: number): Promise<BaseResponse<any>> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
     
     try {
         const response = await fetch(`${getBaseUrl()}/projects/user/${userId}`,{
@@ -493,6 +519,7 @@ export const getAllProjectsEndTaskByUserId = async ( userId: number): Promise<Ba
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                
             },
         });
         if (!response.ok) {

@@ -12,6 +12,7 @@ import { useRouter } from 'next/navigation';
 import UserListeModal from '../Modal/UserListeModal';
 import SkillBar from '../Select2/SkillBar';
 import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
+import NoteFound from '../error/NoteFound';
 
 
 interface ProjectProps {
@@ -320,8 +321,8 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
 
                                                     <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
 
-                                                        <li className="border-b border-[#f0f0f0] last:border-b-0">
-                                                            <a onClick={() => navigateTo(`/admin/projet/new-project/${project.projectCodes}`)}  className="space-x-2 flex px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        <li className="border-b border-[#f0f0f0] last:border-b-0 cursor-pointer hover:underline">
+                                                            <a onClick={() => navigateTo(`/admin/projet/new-project/${project.projectCodes}`)}  className="cursor-pointer hover:underline space-x-2 flex px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                     <span>
                                                                         <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                             <path d="M12.6666 13.3336H3.33329C3.15648 13.3336 2.98691 13.4038 2.86188 13.5288C2.73686 13.6538 2.66662 13.8234 2.66662 14.0002C2.66662 14.177 2.73686 14.3466 2.86188 14.4716C2.98691 14.5967 3.15648 14.6669 3.33329 14.6669H12.6666C12.8434 14.6669 13.013 14.5967 13.138 14.4716C13.263 14.3466 13.3333 14.177 13.3333 14.0002C13.3333 13.8234 13.263 13.6538 13.138 13.5288C13.013 13.4038 12.8434 13.3336 12.6666 13.3336ZM3.33329 12.0002H3.39329L6.17329 11.7469C6.47782 11.7166 6.76264 11.5824 6.97995 11.3669L12.98 5.3669C13.2128 5.12088 13.3387 4.79257 13.3299 4.45392C13.3212 4.11527 13.1786 3.7939 12.9333 3.56023L11.1066 1.73356C10.8682 1.50963 10.5558 1.38114 10.2288 1.37253C9.90187 1.36393 9.58314 1.47581 9.33329 1.6869L3.33329 7.6869C3.1178 7.90421 2.98362 8.18903 2.95329 8.49356L2.66662 11.2736C2.65764 11.3712 2.67031 11.4696 2.70373 11.5618C2.73715 11.654 2.79049 11.7377 2.85995 11.8069C2.92225 11.8687 2.99612 11.9176 3.07735 11.9507C3.15857 11.9839 3.24555 12.0007 3.33329 12.0002ZM10.18 2.6669L12 4.4869L10.6666 5.7869L8.87995 4.00023L10.18 2.6669Z" fill="#033F73" />
@@ -333,8 +334,8 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                                         </li>
 
 
-                                                        <li className="border-b border-[#f0f0f0] last:border-b-0">
-                                                        <a onClick={() => navigateTo(`/admin/projet/${project.projectCodes}`)} className="space-x-2 flex px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                        <li className="border-b border-[#f0f0f0] last:border-b-0 cursor-pointer hover:underline">
+                                                        <a onClick={() => navigateTo(`/admin/projet/${project.projectCodes}`)} className=" cursor-pointer hover:underline space-x-2 flex px-4 py-1.5 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
                                                                 <span>
                                                                     <svg className="" width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path d="M14.3626 7.36301C14.5653 7.64701 14.6666 7.78967 14.6666 7.99967C14.6666 8.21034 14.5653 8.35234 14.3626 8.63634C13.4519 9.91367 11.1259 12.6663 7.99992 12.6663C4.87325 12.6663 2.54792 9.91301 1.63725 8.63634C1.43459 8.35234 1.33325 8.20967 1.33325 7.99967C1.33325 7.78901 1.43459 7.64701 1.63725 7.36301C2.54792 6.08567 4.87392 3.33301 7.99992 3.33301C11.1266 3.33301 13.4519 6.08634 14.3626 7.36301Z" stroke="black" stroke-opacity="0.6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
@@ -346,7 +347,7 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                                         </li>
 
                                                         <li className="border-b border-[#f0f0f0] last:border-b-0">
-                                                            <a href="#" className="space-x-2 flex px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                                            <a href="#" className="space-x-2 flex px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white cursor-pointer hover:underline">
                                                                 <span>
                                                                     <svg width="15" height="16" viewBox="0 0 15 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                         <path d="M7.25006 10C6.97939 10 6.76672 9.78 6.76672 9.5V2.5C6.76672 2.22 6.97939 2 7.25006 2C7.52072 2 7.73339 2.22 7.73339 2.5V9.5C7.73339 9.78 7.52072 10 7.25006 10Z" fill="#038C4C" />
@@ -382,7 +383,7 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                                 <div className="border-l-4 border-blue-900 h-full absolute left-0"></div>
                                                 <div className={`border-l-4 h-full absolute left-0 bg-${project.prioColor}`} style={{ color: project.prioColor }}></div>
 
-                                                <div className="flex flex-col items-start pl-4">
+                                                <div className="flex flex-col items-start pl-4 cursor-pointer hover:underline">
 
                                                     <a onClick={() => navigateTo(`/admin/projet/${project.projectCodes}`)} >
                                                         <p className="mb-3 text-[14px] md:text-[14px] font-medium text-black dark:text-white dark:hover:text-primary">
@@ -403,7 +404,7 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                                     <h3 className="pl-0 text-[14px] md:text-[15px] font-semibold text-black dark:text-white">{project.progress} %</h3>
                                                 </div>
 
-                                                <div className="flex pl-3 md:pl-10 lg:pl-20 xl:pl-30">
+                                                <div className="flex pl-3 md:pl-10 lg:pl-20 xl:pl-30 cursor-pointer hover:underline">
                                                     <UserIcon  onClick={() => openModalUsers(project.projectId,project.projectCodes)}  className="h-8 w-8 rounded-full border-2 text-gray-500" />
                                                     <UserIcon  onClick={() => openModalUsers(project.projectId,project.projectCodes)}  className="h-8 w-8 rounded-full border-2 text-gray-500" />
                                                 </div>
@@ -434,8 +435,8 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                         ))
 
                     ) : (
-                        <div className="w-full col-span-3 bg-white p-6 rounded shadow-lg"> Aucun projet trouvé </div>
 
+                        <NoteFound />
                     )}
 
                 </div>

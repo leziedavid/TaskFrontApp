@@ -30,6 +30,7 @@ import SelectPriorite2 from '@/app/components/Select2/SelectPriorite2';
 import SelectState2 from '@/app/components/Select2/SelectState2';
 import SelectUsersFilter from '@/app/components/Select2/SelectUsersFilter';
 import dynamic from 'next/dynamic';
+import { ArrowLeft as ArrowLeftIcon } from 'lucide-react';
 
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
@@ -131,23 +132,10 @@ export default function Page() {
 
 
     useEffect(() => {
+
             // Calculer le nombre de jours si les dates de début et de fin sont définies
             if (dateDebut && dateFin) {
-                const daysDifferenceString = calculateDaysDifference(dateDebut, dateFin);
-                const daysDifference = Number(daysDifferenceString); // Convertir en nombre
-        
-                // Vérifier si daysDifference est négatif
-                if (daysDifference < 0) {
-                    
-                    const daysDifferenceStr = daysDifference.toString();
-                    setNbDay(daysDifferenceStr);
-                    setMsg("La différence de jours est négative. Veuillez vérifier vos dates.");
-                } else {
-                    // Convertir en chaîne et mettre à jour le nombre de jours
-                    setMsg("");
-                    const daysDifferenceStr = daysDifference.toString();
-                    setNbDay(daysDifferenceStr);
-                }
+                calculateTaskHours(dateDebut,dateFin);
             }
 
             if (response && response.data && response.code === 201) {
@@ -164,6 +152,7 @@ export default function Page() {
                 SetLoad(false);
                 toast.error("Erreur lors de la création du projet. Veuillez réessayer.");
             }
+
     }, [response,dateDebut, dateFin]);
 
     const AddData = async () => {
@@ -255,17 +244,45 @@ export default function Page() {
             }
     };
 
+
+    const calculateTaskHours = (startDate: string, endDate: string) => {
+        const parsedStartDate = parseISO(startDate);
+        const parsedEndDate = parseISO(endDate);
+        
+        // Vérifie la différence de jours
+        const daysDifference = differenceInDays(parsedEndDate, parsedStartDate);
+    
+        if (daysDifference < 0) {
+            setMsg("La différence de jours est négative. Veuillez vérifier vos dates.");
+            return; // Sort de la fonction si les dates sont invalides
+        }
+    
+        const totalDays = daysDifference + 1; // +1 pour inclure le jour de début
+        const finalyDate = totalDays.toString();
+        setNbDay(finalyDate);
+        return totalDays; // Retourne le nombre total de jours
+    };
+
     return (
         <>
             <Toaster position="top-right" reverseOrder={false} />
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/projet`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" /> {/* Flèche à gauche du texte */}
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Ajouter un nouveau projet</h1>
+            </div>
 
             <div className="rounded-sm border border-stroke bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+                
                 <div className=" mb-10 col-span-5 xl:col-span-3">
+
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
 
-                        <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                            <h1 className="text-2xl font-semibold text-gray-900">Ajouter un nouveau projet</h1>
-                        </div>
+                        {/* <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
+                            <h1 className="text-2xl font-semibold text-gray-900">NOUVEAU PROJET</h1>
+                        </div> */}
                         
                         <div className="p-7">
 
@@ -317,7 +334,7 @@ export default function Page() {
 
                                 {nbDay ? (
                                     <div className="mb-5">
-                                        <p> La durée estimée de ce projet est de {nbDay} Jours </p>
+                                        <p> La durée de ce projet est estimée à {nbDay} Jours </p>
                                         <span className="text-red-800"> {msg}</span>
                                     </div>
                                         ) : (

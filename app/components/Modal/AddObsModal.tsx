@@ -5,7 +5,8 @@ import toast, { Toaster } from 'react-hot-toast';
 import { BaseResponse } from '../../interfaces/ApiResponse';
 import { Users } from '../../interfaces/Users';
 import FileUpload from '../../components/FileUpload';
-import QuillEditor from '../QuillEditor';
+import dynamic from 'next/dynamic';
+const QuillEditor = dynamic(() => import('@/app/components/QuillEditor'), {ssr: false,});
 import { FileObject } from '../../interfaces/FileObject';
 import { getUserIdFromToken } from '../../services/ApiService';
 import { getObsById, SaveTaskObs, updateObs } from '../../services/TaskObsServices';
@@ -364,13 +365,13 @@ const AddObsModal: React.FC<AddObsModalProps> = ({
                                 <div className="space-x-4 flex items-center justify-end p-5">
                                         {!isdisabled ? (
                                             <button onClick={() => SaveObs()}
-                                                type="button" className="py-2.5 px-5 text-sm font-medium  text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="popup-modal">
+                                                type="button" className="py-2.5 px-5 text-sm font-medium  text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-black focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-black dark:hover:bg-gray-700" data-modal-hide="popup-modal">
                                                 {onDeleteMessage}
                                             </button>
                                         ) : (
                                             <button
                                                 // onClick={() => EditAction()}
-                                                type="button" className="py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="popup-modal">
+                                                type="button" className="py-2.5 px-5 text-sm font-medium text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-black focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" data-modal-hide="popup-modal">
                                                 {onDeleteMessage}
                                             </button>
                                         )}

@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useEffect, useState } from 'react'
-import { Users, User, Car, Hash, Route, Wallet, MessageSquareDot, MessageSquareMore } from 'lucide-react';
+import { Users, User, Car, Hash, Route, Wallet, MessageSquareDot, MessageSquareMore, Loader } from 'lucide-react';
 import dynamic from 'next/dynamic';
 
 import TrajetPreloader from '@/app/components/Preloader/TrajetPreloader';
-import ClientTrajetNotFound from '@/app/components/error/ClientTrajetNotFound';
+import ClientTrajetNotFound from '@/app/components/error/NoteFound';
 import { GlobalStatsDTO } from '@/app/interfaces/globalStatsDTO';
 import { getStatistique } from '@/app/services/getStatistique';
+import SkeletonLoader from '@/app/components/SkeletonLoader';
+import NoteFound from '@/app/components/error/NoteFound';
 const StatisticsDashboard = dynamic(() => import('@/app/components/Charts/StatisticsDashboard'), { ssr: false });
 const BarChartComponent = dynamic(() => import('@/app/components/chartsJs/BarChart'), { ssr: false });
 
@@ -104,15 +106,16 @@ export default function Page() {
 
         <>
 
+
             <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
             </div>
+
 
             {loading ? (
                 <>
-                <TrajetPreloader />
-                <TrajetPreloader />
-                <TrajetPreloader />
+                {/* <SkeletonLoader /> */}
+
                 </>
             ) : (
                 response ? (
@@ -218,7 +221,7 @@ export default function Page() {
                     
 
                     ) : (
-                        <ClientTrajetNotFound />
+                        <NoteFound />
                     )
                 )}
 

@@ -44,9 +44,11 @@ export const updateUser = async (id: string, data: FormData): Promise<BaseRespon
 export const getAllUsersService2 = async (
     page: number = 0,
     size: number = 10,
-    sortBy: string = 'users_created_at'
+    sortBy: string = 'userId'
 ): Promise<BaseResponse<any>> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     // Construire l'URL avec les paramètres de pagination et de tri
     const url = new URL(`${getBaseUrl()}/users/getAllUsersByDepartment2`);
@@ -60,6 +62,7 @@ export const getAllUsersService2 = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
             },
         });
         

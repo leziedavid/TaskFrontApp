@@ -10,8 +10,11 @@ import { calculateDaysDifference, calculateHoursDifference, compareDateRangesTas
 import { SaveTask } from '@/app/services/TaskService';
 import SelectPriorite2 from '@/app/components/Select2/SelectPriorite2';
 import SelectState2 from '@/app/components/Select2/SelectState2';
-import QuillEditor from '@/app/components/QuillEditor';
 import SelectOneUsers from '@/app/components/Select2/SelectOneUsers';
+import { ArrowLeftIcon } from 'lucide-react';
+import dynamic from 'next/dynamic';
+const QuillEditor = dynamic(() => import('@/app/components/QuillEditor'), {ssr: false,});
+
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
 
@@ -101,6 +104,7 @@ export default function Page() {
 
         // Calculer le nombre de jours si les dates de début et de fin sont définies
         if (dateDebut && dateFin) {
+
             const daysDifferenceString = calculateDaysDifference(dateDebut, dateFin);
             const daysDifference = Number(daysDifferenceString); // Convertir en nombre
 
@@ -120,7 +124,8 @@ export default function Page() {
             }
 
             const hoursDifference = calculateHoursDifference(dateDebut, dateFin);
-            setHeurs(hoursDifference);
+            calculateTaskHours(dateDebut, dateFin);
+            // setHeurs(hoursDifference);
 
         }
 
@@ -144,7 +149,7 @@ export default function Page() {
             toast.success("Tâche crée avec réussie !");
 
             setTimeout(() => {
-                navigateTo(`admin/projet/${id}`);
+                navigateTo(`/admin/projet/${id}`);
             }, 3000);
 
         } else if (response) {
@@ -222,18 +227,42 @@ export default function Page() {
         };
     };
 
+    const calculateTaskHours = (startDate: string, endDate: string) => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+    
+        // Vérifie si les dates sont valides
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            setHeurs("");
+            return 0; // Retourne 0 si les dates sont invalides
+        }
+    
+        const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1; // +1 pour inclure le jour de début
+    
+        // Calcule le nombre d'heures
+        const totalHours = totalDays > 0 ? totalDays * 8 : 0; // 8 heures par jour
+        setHeurs(totalHours.toString());
+    
+        return totalHours;
+    };
+    
+
 
     return (
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/projet/${id}`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" />
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Ajouter une nouvelle tâche</h1>
+            </div>
+
             <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
                 <div className=" mb-10 col-span-5 xl:col-span-3">
                     <div className="rounded-sm  bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-
-                        <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                            <h1 className="text-2xl font-semibold text-gray-900">Ajouter une nouvelle tâche</h1>
-                        </div>
 
                         <div className="p-7">
                             
@@ -296,7 +325,7 @@ export default function Page() {
                                 </div>
 
                                 <div className="mb-5">
-                                    <label className="mb-3 block text-lg font-medium text-black dark:text-white" htmlFor="Username">Nombre d'heures estimé pour cette tâche.<span className="text-red-700">  * </span></label>
+                                    <label className="mb-3 block text-lg font-medium text-black dark:text-white" htmlFor="Username">Nombre d'heures estimé pour cette tâche<span className="text-red-700">  * </span></label>
                                     <input value={heurs} onChange={(event) => { setHeurs(event.target.value); }} className="w-full rounded-lg border border-stroke py-2 px-4 text-black focus:border-black focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-black" type="number" name="heurs" placeholder="2H" />
                                 </div>
 

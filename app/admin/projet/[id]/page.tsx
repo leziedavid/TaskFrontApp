@@ -2,7 +2,7 @@
 "use client";
 
 import React, { useEffect, useState } from 'react'
-import { ArrowDown, CheckCircle, Clock, X } from 'lucide-react';
+import { ArrowDown, ArrowLeftIcon, CheckCircle, Clock, X } from 'lucide-react';
 import Image from 'next/image';
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
 import { Task,ProjectsDetails } from '@/app/interfaces/Global';
@@ -286,13 +286,17 @@ export default function Page() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/projet`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" /> {/* Flèche à gauche du texte */}
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Détail du projet</h1>
+            </div>
+
             <div className="min-h-full">
 
                 <main className="py-10 px-2">
-
-                        <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                            <h1 className="text-2xl font-semibold text-gray-900">Détail du projet</h1>
-                        </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-6  lg:grid-cols-2 mb-8">
 
@@ -307,7 +311,7 @@ export default function Page() {
                                             <input disabled value={response?.projects?.projectName ?? ""} className="bg-white text-[25px] font-bold w-full rounded-lg border border-stroke py-1 px-2 text-black focus:border-black focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-black" type="text" name="Libelet" placeholder="" />
                                         </div>
 
-                                        <div dangerouslySetInnerHTML={{ __html: response?.projects?.projectDescription ?? "" }}  className="mb-2" />
+                                        <div dangerouslySetInnerHTML={{ __html: response?.projects?.projectDescription ?? "" }}  className="mb-5" />
 
                                         <label className="mb-4.5 block text-lg font-medium text-black dark:text-white">DETAILS</label>
 
@@ -373,7 +377,7 @@ export default function Page() {
                                         <div>
 
                                             <span className="mt-1.5 block mb-3">
-                                                <span className="font-medium text-black dark:text-white">ESTIMATIONS ET PROGRESSION</span>
+                                                <span className="font-medium text-black dark:text-white">ESTIMATIONS ET PROGRESSION </span>
                                             </span>
                                             <hr className="border-gray-900 my-6" />
 
@@ -381,7 +385,7 @@ export default function Page() {
                                                 <p className="mb-1.5 font-medium text-black dark:text-white">Temps restant :</p>
                                                 <h4 className="mb-2 text-xl font-bold text-black dark:text-white">{response?.projects?.projectNombreJours ?? ""} jours</h4>
 
-                                                <p className="mb-1.5 font-medium text-black dark:text-white">Progression:</p>
+                                            <p className="mb-1.5 font-medium text-black dark:text-white">Progression:{response?.projects?.progress} </p>
                                                 <div>
                                                     <SkillBar level={response?.projects?.progress ?? 0 } color="#038C4C" />{response?.projects?.progress ?? ""} %
                                                 </div>
@@ -401,8 +405,8 @@ export default function Page() {
 
                             <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
 
-                                <h2 id="timeline-title" className="text-lg font-medium text-gray-900 flex items-center gap-2">
-                                    <Clock /> Historique réchargement
+                                <h2 id="timeline-title" className="uppercase mb-8 text-lg font-medium text-gray-900 flex items-center gap-2">
+                                    <Clock /> Options sur le projet
                                 </h2>
 
                                 <div className="mt-6 flow-root">
@@ -587,16 +591,23 @@ export default function Page() {
                                                         </tr>
                                                     )}
 
-
-
                                                     {openfiles ? (
 
-                                                        <div className=''>
+                                                        <div className="items-center">
                                                             <AddFilesCard id={id} fetchProjectDetails={fetchProjectDetails} />
-                                                            <button onClick={() => handleAddFiles(0)} className="font-medium text-[#03233F] flex items-center">
-                                                                <span className="font-bold">ANNULER L&apos;OPÉRATION</span>
-                                                            </button>
+                                                            <div className="flex items-center space-x-8 mt-8">
+                                                                
+                                                                <button onClick={() => handleAddFiles(0)} className="font-medium text-[#03233F] flex items-center">
+                                                                    <span className="font-bold">ANNULER L&apos;OPÉRATION</span>
+                                                                </button>
+
+                                                                <button onClick={() => handleAddFiles(0)} className="font-medium text-white rounded-lg border bg-[#012340] py-2 px-6 flex items-center">
+                                                                    <span className="font-bold">AJOUTER LE FICHIER </span>
+                                                                </button>
+
+                                                            </div>
                                                         </div>
+
 
                                                     ) : (
                                                         <>
@@ -706,9 +717,7 @@ export default function Page() {
 
                                         <div className="w-full xl:w-1/2">
                                         <label className="mb-3 block text-lg font-medium text-black dark:text-white">Date debut</label>
-                                        <input type="date"
-                                            placeholder=""
-                                            value={dateDebut}
+                                        <input type="date"  placeholder=""  value={dateDebut}
                                             onChange={(e) => setDateDebut(e.target.value)} className="w-full rounded-lg border-[1.5px] border-stroke bg-transparent px-5 py-2 font-normal text-black outline-none transition focus:border-primary active:border-primary disabled:cursor-default disabled:bg-whiter dark:border-form-strokedark dark:bg-form-input dark:text-white dark:focus:border-primary" />
                                         </div>
 

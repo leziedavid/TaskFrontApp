@@ -45,6 +45,8 @@ export const deleteTask = async (id: number) => {
 
 export const getTaskByProjectId = async (projectCode: string) => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
 
@@ -54,6 +56,7 @@ export const getTaskByProjectId = async (projectCode: string) => {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
                 },
             }
         );
@@ -83,37 +86,55 @@ export const fetchTaskDetails = async (codes: string) => {
     }
 };
 
-export const changeTaskState = async (id: number, state: string, selectedColors: string) => {
+export const changeTaskState = async (
+    id: number,
+    state: string,
+    selectedColors: string,
+    idProjet: string | undefined,
+    stepsValue:  number,
+) => {
     try {
-        const response = await fetch(`${getBaseUrl()}/tasks/updateTaskState/${id}?state=${encodeURIComponent(state)}&Colors=${encodeURIComponent(selectedColors)}`, {
+        const projetParam = idProjet ? `&projetsId=${encodeURIComponent(idProjet)}` : '';
+        const response = await fetch(`${getBaseUrl()}/tasks/updateTaskState/${id}?state=${encodeURIComponent(state)}&Colors=${encodeURIComponent(selectedColors)}${projetParam}&steps=${encodeURIComponent(stepsValue)}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
         });
+
         if (!response.ok) {
-            throw new Error('Failed to update task');
+            throw new Error('Failed to update task state');
         }
         return await response.json();
     } catch (error) {
-        console.error("Toutes les actions associées doivent avoir un statut terminer");
+        console.error("Erreur lors de la mise à jour de l'état de la tâche :", error);
         throw error;
     }
 };
 
-export const validteTaskState = async (id: number, state: string, selectedColors: string) => {
+export const validteTaskState = async (
+    id: number,
+    state: string,
+    selectedColors: string,
+    idProjet: string | undefined
+) => {
     try {
-        const response = await fetch(`${getBaseUrl()}/tasks/validteTaskState/${id}?state=${encodeURIComponent(state)}&Colors=${encodeURIComponent(selectedColors)}`, {
+        const projetParam = idProjet ? `&projetsId=${encodeURIComponent(idProjet)}` : '';
+        const response = await fetch(`${getBaseUrl()}/tasks/validteTaskState/${id}?state=${encodeURIComponent(state)}&Colors=${encodeURIComponent(selectedColors)}${projetParam}`, {
             method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
         });
+
         if (!response.ok) {
             throw new Error('Failed to update task');
         }
+
         return await response.json();
     } catch (error) {
         console.error('Error updating task:', error);
         throw error;
     }
 };
+
+
 
 export const updateProjectAndTask = async (
     projectId: number,
@@ -240,6 +261,9 @@ export const getFilteredTasks = async (
     endDate?: string
 ): Promise<BaseResponse<Task[]>> => {  // Assurez-vous que le type est BaseResponse<Task[]>
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
+    
     try {
         const params = new URLSearchParams();
 
@@ -256,6 +280,8 @@ export const getFilteredTasks = async (
             headers: {
                 'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                 'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
             },
         });
         

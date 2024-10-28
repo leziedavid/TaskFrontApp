@@ -11,6 +11,8 @@ interface NotificationResponse extends BaseResponse<NotificationDTO[]> {}
 // Fonction pour obtenir les notifications par ID de projet
 export const getNotificationsByProjectId = async (projectCode: string): Promise<NotificationDTO[]> => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
         const response = await fetch(`${getBaseUrl()}/notifications/getByProjectId/${projectCode}`,
@@ -19,6 +21,8 @@ export const getNotificationsByProjectId = async (projectCode: string): Promise<
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
                 },
             }
         );
@@ -46,6 +50,8 @@ export const getNotificationsByProjectId = async (projectCode: string): Promise<
 
 export const getNotificationsById = async (projectCode: string):  Promise<BaseResponse<any>>  => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
         const response = await fetch(`${getBaseUrl()}/notifications/getNotificationById/${projectCode}`,
@@ -54,6 +60,8 @@ export const getNotificationsById = async (projectCode: string):  Promise<BaseRe
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
                 },
             }
         );
@@ -69,6 +77,8 @@ export const getNotificationsById = async (projectCode: string):  Promise<BaseRe
 
 export const getUnreadNotifications = async (): Promise<BaseResponse<any>>  => {
     const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
 
     try {
         const response = await fetch(`${getBaseUrl()}/notifications/getUnreadNotifications`,
@@ -77,6 +87,8 @@ export const getUnreadNotifications = async (): Promise<BaseResponse<any>>  => {
                 headers: {
                     'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
                     'Content-Type': 'application/json',
+                    ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+
                 },
             }
         );

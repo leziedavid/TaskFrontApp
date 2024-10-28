@@ -20,18 +20,56 @@ import { getBaseUrl } from "./baseUrl";
 };
 
 
-export const getAllDepartement = async () => {
+// export const getAllDepartement = async () => {
+//     try {
+//         const response = await fetch(`${getBaseUrl()}/departments/getAllDepartments`);
+//         if (!response.ok) {
+//             throw new Error('Failed to fetch departments');
+//         }
+//         return await response.json();
+//     } catch (error) {
+//         console.error('Error fetching departments:', error);
+//         throw error;
+//     }
+// };
+
+export const getAllDepartement = async (
+    page: number = 0,
+    size: number = 10,
+    sortBy: string = 'departmentId'
+): Promise<BaseResponse<any>> => {
+    const token = localStorage.getItem('token');
+    const version = localStorage.getItem('version');
+    const userId = version ? version.split('@')[1] : null;
+
+    // Construire l'URL avec les paramètres de pagination et de tri
+    const url = new URL(`${getBaseUrl()}/departments/getAllDepartments`);
+    url.searchParams.append('page', page.toString());
+    url.searchParams.append('size', size.toString());
+    url.searchParams.append('sortBy', sortBy);
+
     try {
-        const response = await fetch(`${getBaseUrl()}/departments/getAllDepartments`);
+        const response = await fetch(url.toString(), {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`, // Ajoutez le préfixe 'Bearer ' au token JWT
+                'Content-Type': 'application/json',
+                ...(userId && { 'userId': userId }), // Ajouter User-ID si userId est défini
+            },
+        });
+        
         if (!response.ok) {
             throw new Error('Failed to fetch departments');
         }
-        return await response.json();
+        
+        const data: BaseResponse<any> = await response.json();
+        return data;
     } catch (error) {
         console.error('Error fetching departments:', error);
         throw error;
     }
 };
+
 export const removeDepartement = async (id: number) => {
     try {
         const response = await fetch(`${getBaseUrl()}/department/deleteDepartment/${id}`, {

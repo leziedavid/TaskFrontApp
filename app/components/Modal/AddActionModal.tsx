@@ -5,13 +5,15 @@ import toast, { Toaster } from 'react-hot-toast';
 import { BaseResponse } from '../../interfaces/ApiResponse';
 import { Users } from '../../interfaces/Users';
 
-import {differenceInDays } from 'date-fns';
+import {differenceInDays, parse } from 'date-fns';
 import { parseISO } from 'date-fns/parseISO';
 
 import { getUserIdFromToken } from '../../services/ApiService';
 import { calculateHoursDifference, compareDateRanges } from '../../services/dateService';
 import { getActionById, SaveTaskAction, updateActions } from '../../services/TaskActionServices';
-import QuillEditor from '../QuillEditor';
+import dynamic from 'next/dynamic';
+const QuillEditor = dynamic(() => import('@/app/components/QuillEditor'), {ssr: false,});
+
 import { Donnees } from '../../interfaces/Donnees';
 import { useRouter,useParams } from 'next/navigation';
 
@@ -79,13 +81,33 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
     const [userId, setUserId] = useState<number | null>(null);
     const [Load, SetLoad] = useState(false);
 
+    // const calculateDaysDifference = (date1: string, date2: string): string => {
+    //     const parsedDate1 = parseISO(date1);
+    //     const parsedDate2 = parseISO(date2);
+    //     const daysDifference = differenceInDays(parsedDate2, parsedDate1)+1;
+    //     return daysDifference.toString();
+    // };
+
+
     const calculateDaysDifference = (date1: string, date2: string): string => {
-        const parsedDate1 = parseISO(date1);
-        const parsedDate2 = parseISO(date2);
-        const daysDifference = differenceInDays(parsedDate2, parsedDate1)+1;
+        // Convertir les chaînes de caractères en objets Date
+        const [day1, month1, year1] = date1.split('/').map(Number);
+        const [day2, month2, year2] = date2.split('/').map(Number);
+    
+        // Créer des objets Date en mettant les heures à 0
+        const startOfDate1 = new Date(year1, month1 - 1, day1, 0, 0, 0);
+        const startOfDate2 = new Date(year2, month2 - 1, day2, 0, 0, 0);
+    
+        // Calcule la différence en jours
+        const daysDifference = differenceInDays(startOfDate2, startOfDate1) + 1;
         return daysDifference.toString();
     };
-
+    
+    // Exemple d'utilisation
+    const diff = calculateDaysDifference("25/10/2024 12:19", "26/10/2024 15:45");
+    console.log(diff); // Affiche 2
+    
+    
     const fetchUserId = async () => {
 
         try {
@@ -119,10 +141,12 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
         setDateFin("");
         setNbDay("");
         setHeurs("");
+        setMsg("");
     };
 
 
     useEffect(() => {
+
         fetchUserId();
         viders();
 
@@ -141,15 +165,18 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
 
             // Vérifier si daysDifference est négatif
             if (daysDifference < 0) {
+
                 setNbDay(daysDifference.toString());
                 setMsg("La différence de date est négative. Veuillez vérifier vos dates.");
+
             } else {
                 setMsg("");
                 setNbDay(daysDifference.toString());
             }
 
             const hoursDifference = calculateHoursDifference(dateDebut, dateFin);
-            setHeurs(hoursDifference);
+            calculateTaskHours(dateDebut, dateFin);
+            // setHeurs(hoursDifference);
         }
 
         // Comparer les plages de dates si toutes les dates sont définies
@@ -164,6 +191,7 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
                 // alert(message);
             } else {
                 setMessage('');
+                setMsg("");
                 console.log("Dates are valid, proceeding...");
             }
         }
@@ -250,10 +278,12 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
                         toast.success(res.messages ?? 'Message par défaut');;
                         SetLoad(false);
                         onClose();
+                        viders();
                         fetchTaskDetails(codes!);
                     }else{
                         SetLoad(false);
                         onClose();
+                        viders();
                         fetchTaskDetails(codes!);
                         toast.success(res.messages ?? 'Message par défaut');
                     }
@@ -268,10 +298,12 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
                         toast.success(res.messages ?? 'Message par défaut');;
                         SetLoad(false);
                         onClose();
+                        viders();
                         fetchTaskDetails(codes!);
                     }else{
                         SetLoad(false);
                         onClose();
+                        viders();
                         fetchTaskDetails(codes!);
                         toast.success(res.messages ?? 'Message par défaut');;
                     }
@@ -279,7 +311,7 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
 
             } catch (error) {
                 onClose();
-                // toast.error(`Erreur lors de l'ajout de l'action verifier votre connexion internet :`);
+                viders();
                 SetLoad(false);
             };
     };
@@ -288,8 +320,28 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
 
         if(response){
             fetchTaskDetails(codes!)
+            viders();
         }
     }, [response]);
+
+    const calculateTaskHours = (startDate: string, endDate: string) => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+    
+        // Vérifie si les dates sont valides
+        if (isNaN(start.getTime()) || isNaN(end.getTime())) {
+            setHeurs("");
+            return 0; // Retourne 0 si les dates sont invalides
+        }
+    
+        const totalDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 3600 * 24)) + 1; // +1 pour inclure le jour de début
+    
+        // Calcule le nombre d'heures
+        const totalHours = totalDays > 0 ? totalDays * 8 : 0; // 8 heures par jour
+        setHeurs(totalHours.toString());
+    
+        return totalHours;
+    };
 
     return (
 
@@ -398,7 +450,7 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
                                             {!isdisabled ? (
 
                                                 <button onClick={() => SaveAction()} type="button"
-                                                    className="py-2.5 px-5 text-sm font-medium  text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-white focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
+                                                    className="py-2.5 px-5 text-sm font-medium  text-white focus:outline-none bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-black focus:z-10 focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700"
                                                     data-modal-hide="popup-modal" >
                                                     {onDeleteMessage}
                                                 </button>

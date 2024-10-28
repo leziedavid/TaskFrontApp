@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from 'react';
 import { FileObject } from '../../interfaces/FileObject';
 
@@ -23,7 +25,7 @@ const AddFilesCard: React.FC<AddFilesCardProps> = ({fetchProjectDetails,id}) => 
                 fetchProjectDetails(id);
             }
         } catch (error) {
-            console.error('Erreur lors de la suppression du projet :', error);
+            console.error('Erreur:', error);
             toast.error("Erreur lors de la connexion. Veuillez réessayer.");
         }
     };
@@ -33,7 +35,7 @@ const AddFilesCard: React.FC<AddFilesCardProps> = ({fetchProjectDetails,id}) => 
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
-            <section className="bg-white dark:bg-gray-900">
+            <section className="p-5 bg-white dark:bg-gray-900">
             <label className="mb-4.5 block text-lg font-medium text-black dark:text-white"> FICHIERS </label>
 
                 <div className="mb-5">

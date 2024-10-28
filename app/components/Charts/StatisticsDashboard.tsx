@@ -43,9 +43,9 @@ const StatisticsDashboard: React.FC<StatsProps> = ({
     return (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-3 gap-4 p-2 px-0">
             {/* Carte des statistiques de projets */}
-            {totalProjectsInProgress > 0 &&
-                totalProjectsPending > 0 &&
-                totalProjectsCompleted > 0 && (
+            {(totalProjectsInProgress > 0 ||
+                totalProjectsPending > 0 ||
+                totalProjectsCompleted > 0) && (
                     <ProjectStatisticsChart
                         totalProjectsInProgress={totalProjectsInProgress}
                         totalProjectsPending={totalProjectsPending}
@@ -53,16 +53,16 @@ const StatisticsDashboard: React.FC<StatsProps> = ({
                     />
                 )}
 
-            {/* Carte des statistiques de tâches */}
-            {totalTasksInProgress > 0 &&
-                totalTasksPending > 0 &&
-                totalTasksCompleted > 0 && (
+            {(totalTasksInProgress > 0 ||
+                totalTasksPending > 0 ||
+                totalTasksCompleted > 0) && (
                     <TaskStatisticsChart
                         totalTasksInProgress={totalTasksInProgress}
                         totalTasksPending={totalTasksPending}
                         totalTasksCompleted={totalTasksCompleted}
                     />
                 )}
+
 
             {/* Carte des statistiques d'utilisateurs */}
             {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (

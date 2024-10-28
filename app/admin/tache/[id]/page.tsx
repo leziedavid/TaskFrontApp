@@ -3,7 +3,7 @@
 
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
 import { fetchTaskDetails } from '@/app/services/TaskService';
-import { ArrowDown, Clock } from 'lucide-react';
+import { ArrowDown, ArrowLeftIcon, Clock } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -20,6 +20,7 @@ import DateConverter from '@/app/components/DateConverter';
 import { formatDate } from '@/app/services/DateUtils';
 import ToggleSwitch from '@/app/components/ToggleSwitch/ToggleSwitch';
 import DataNotFound from '@/app/components/error/DataNotFound';
+import NoteFound from '@/app/components/error/NoteFound';
 
 
 interface ApiResulte {
@@ -66,7 +67,12 @@ export default function Page() {
     const [isModalOpenObs, setIsModalOpenObs] = useState(false);
     const [isModalOpenActions, setIsModalOpenActions] = useState(false);
 
-    const authorisation = localStorage.getItem('authorisation');
+    const [authorisation, setAuthorisation] = useState<string | null>(null);
+    useEffect(() => {
+        const auth = localStorage.getItem('authorisation');
+        setAuthorisation(auth);
+    }, []);
+
 
     const closeModalObs = () => {
         setIsModalOpenObs(false);
@@ -302,13 +308,17 @@ export default function Page() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/projet/${localStorage.getItem('selectedProjectCode')}`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" />
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Détail sur la tâche</h1>
+            </div>
+
             <div className="min-h-full">
                 
                 <main className="py-10 px-2">
-
-                <div className="mx-auto max-w-7xl px-4 sm:px-6 md:px-8">
-                    <h1 className="text-2xl font-semibold text-gray-900">Détail sur la tache</h1>
-                </div>
 
                     <div className="mt-8 grid grid-cols-1 gap-6  lg:grid-cols-2 mb-8">
 
@@ -410,19 +420,18 @@ export default function Page() {
 
                                                         </div>
 
-
                                                         <div className="mb-4 flex flex-col-6 gap-2 xl:flex-row xl:items-start">
 
                                                             <div className="w-full xl:w-1/2 flex-2">
                                                                 <label className="mb-2 block text-black dark:text-white">Date de Debut :</label>
-                                                                <span className="text-lg rounded-lg border border-stroke py-2 px-2 text-black text-right">
+                                                                <span className="text-sm rounded-lg border border-stroke py-2 px-2 text-black text-right">
                                                                     <DateConverter dateStr={response.tasks[0]?.taskStartDate} />
                                                                 </span>
                                                             </div>
 
                                                             <div className="w-full xl:w-1/2 flex-2">
                                                                 <label className="mb-2 block text-black dark:text-white">Date de fin :</label>
-                                                                <span className="text-lg rounded-lg border border-stroke py-2 px-2 text-black text-left">
+                                                                <span className="text-sm rounded-lg border border-stroke py-2 px-2 text-black text-left">
                                                                     <DateConverter dateStr={response.tasks[0]?.taskEndDate} />
                                                                 </span>
                                                             </div>
@@ -430,12 +439,12 @@ export default function Page() {
 
                                                         <div className="mb-5">
                                                             <label className="mb-2.5 block text-black dark:text-white">Temps</label>
-                                                            <input disabled value={response.tasks[0]?.taskNombreHeurs} className=" bg-white text-lg w-full rounded-lg border border-stroke py-2 px-4 text-black " />
+                                                            <input disabled value={response.tasks[0]?.taskNombreHeurs} className=" bg-white text-sm w-full rounded-lg border border-stroke py-2 px-4 text-black " />
                                                         </div>
 
                                                         <div className="mb-5">
                                                             <label className="mb-2.5 block text-black dark:text-white">Nombre de jour</label>
-                                                            <input disabled value={response.tasks[0]?.taskNombreJours} className=" bg-white text-lg w-full rounded-lg border border-stroke py-2 px-4 text-black " />
+                                                            <input disabled value={response.tasks[0]?.taskNombreJours} className=" bg-white text-sm w-full rounded-lg border border-stroke py-2 px-4 text-black " />
                                                         </div>
 
                                                     </div>
@@ -446,7 +455,7 @@ export default function Page() {
 
                                         ) : (
                                         
-                                        <DataNotFound />
+                                        <NoteFound />
                                         )}
 
                                     </div>
@@ -460,8 +469,8 @@ export default function Page() {
 
                             <div className="bg-white px-4 py-5 shadow sm:rounded-lg sm:px-6">
 
-                                <h2 id="timeline-title" className="text-lg font-medium text-gray-900 flex items-center gap-2">
-                                    <Clock /> PARAMETRAGE
+                                <h2 id="timeline-title" className="uppercase mb-4 <text-lg font-medium text-gray-900 flex items-center gap-2 upercase">
+                                    <Clock /> Options sur la tâche
                                 </h2>
 
 
@@ -538,7 +547,7 @@ export default function Page() {
                                                                                         <span className="mr-2">
                                                                                             <DateConverter dateStr={obs.observationCreatedAt} /> -
                                                                                         </span>
-                                                                                        <div dangerouslySetInnerHTML={{ __html: truncateDescription(obs.description) }} />
+                                                                                        <div  dangerouslySetInnerHTML={{ __html: truncateDescription(obs.description) }} />
                                                                                     </div>
                                                                                 </td>
 
@@ -568,14 +577,14 @@ export default function Page() {
 
 
                                                             ) : (
-                                                                <DataNotFound />
+                                                                <NoteFound />
                                                             )}
 
 
                                                         </div>
 
                                                         {response && response.observations.length > 0 ? (
-                                                            <a onClick={() => navigateTo(`/admin/tache/new-/${id}`)} type="button" className="flex items-center justify-center w-full text-white bg-[#012340] hover:bg-[#012340] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-[#012340] dark:hover:bg-[#012340] focus:outline-none dark:focus:ring-[#012340]">
+                                                            <a onClick={() => { localStorage.setItem('tacheId', id!); navigateTo(`/admin/tache/new-obs/${id}`); }} type="button" className="mt-8 flex items-center justify-center w-full text-white bg-gray-400 hover:bg-[#012340] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-[#012340] dark:hover:bg-[#012340] focus:outline-none dark:focus:ring-[#012340] cursor-pointer hover:underline">
                                                                 <span className="mr-2">VOIR PLUS</span>
                                                                 <svg width="25" height="25" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M12.5 4.5L11.09 5.91L16.67 11.5H4.5V13.5H16.67L11.09 19.09L12.5 20.5L20.5 12.5L12.5 4.5Z" fill="white" />
@@ -604,8 +613,7 @@ export default function Page() {
                                                                     }
                                                                 }}
                                                                 className="mb-2 flex justify-center rounded-lg bg-[#012340] py-2 px-6 font-medium text-white hover:bg-opacity-90"
-                                                                type="button"
-                                                            >
+                                                                type="button">
                                                                 + ACTION
                                                             </button>
 
@@ -615,13 +623,13 @@ export default function Page() {
 
                                                         {response && response.actions.length > 0 ? (
 
-                                                            <table className="font-inter w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
+                                                            <table className="uppercase font-inter w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
                                                                 <thead className="whitespace-nowrap uppercase w-full rounded-lg bg-[#ffffff] text-base font-semibold text-white">
                                                                     <tr>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-sm  text-[#212B36]">Date et Heures de debut</th>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-sm  text-[#212B36]">Libelle</th>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-sm  text-[#212B36]">Status</th>
-                                                                        <th className="whitespace-nowrap py-3 text-sm   text-[#212B36] ">Action</th>
+                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Date et Heures de debut</th>
+                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Libelle</th>
+                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px] text-[#212B36]">Status</th>
+                                                                        <th className="whitespace-nowrap py-3 text-[13px] text-[#212B36] ">Action</th>
                                                                     </tr>
                                                                 </thead>
                                                                 <tbody>
@@ -629,13 +637,13 @@ export default function Page() {
                                                                         {response.actions.map((action, index) => (
 
                                                                             <tr key={index} className="cursor-pointer bg-white drop-shadow-sm hover:shadow-lg">
-                                                                                <td className="whitespace-nowrap py-3 text-[#000000] px-3 text-[15px] font-normal">
+                                                                                <td className="whitespace-nowrap py-3 text-[#000000] px-3 texttext-[13px] font-normal">
                                                                                     {formatDate(action.actionStartDate)}
                                                                                 </td>
 
-                                                                                <td className="whitespace-nowrap px-3 text-[#000000] py-3 text-[15px] font-norma "> {action.libelle}</td>
+                                                                                <td className="whitespace-nowrap px-3 text-[#000000] py-3 texttext-[13px] font-norma "> {action.libelle}</td>
 
-                                                                                <td className="whitespace-nowrap px-3 text-[#000000] py-3 text-[15px] font-normal ">
+                                                                                <td className="whitespace-nowrap px-3 text-[#000000] py-3 texttext-[13px] font-normal ">
                                                                                     <ToggleSwitch isChecked={action.isValides === 1} onChange={() => handleCheckboxChange(action.actionId, action.isValides)} />
                                                                                 </td>
 
@@ -665,12 +673,12 @@ export default function Page() {
                                                             </table>
 
                                                                 ) : (
-                                                                    <DataNotFound />
+                                                                    <NoteFound />
                                                                 )}
                                                         </div>
 
                                                         {response && response.actions.length > 0 ? (
-                                                            <a onClick={() => navigateTo(`/admin/tache/new-actions/${id}`)} type="button" className="flex items-center justify-center w-full text-white bg-[#012340] hover:bg-[#012340] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 dark:bg-[#012340] dark:hover:bg-[#012340] focus:outline-none dark:focus:ring-[#012340]">
+                                                            <a onClick={() => { localStorage.setItem('tacheId', id!); navigateTo(`/admin/tache/new-actions/${id}`); }} type="button" className=" cursor-pointer hover:underline mt-8 flex items-center justify-center w-full text-white bg-gray-400 hover:bg-[#012340] focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-2 py-2 me-2 mb-2 dark:bg-[#012340] dark:hover:bg-[#012340] focus:outline-none dark:focus:ring-[#012340]">
                                                                 <span className="mr-2">VOIR PLUS</span>
                                                                 <svg width="20" height="20" viewBox="0 0 25 25" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                                     <path d="M12.5 4.5L11.09 5.91L16.67 11.5H4.5V13.5H16.67L11.09 19.09L12.5 20.5L20.5 12.5L12.5 4.5Z" fill="white" />

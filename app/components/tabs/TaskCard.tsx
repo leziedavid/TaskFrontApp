@@ -16,6 +16,7 @@ import { formatDate } from '../../services/DateUtils';
 import { changeTaskPriority, changeTaskState, deleteTask, validteTaskState } from '../../services/TaskService';
 import AddTaskAlerteModal from '../Modal/AddTaskAlerteModal';
 import { getUserIdFromToken } from '../../services/ApiService';
+import NoteFound from '../error/NoteFound';
 
 interface TaskCardProps {
     tasksEnCours : Task[];
@@ -38,7 +39,10 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
     const [StateSelecte, setStateSelecte] = useState<string>('');
     const [selectedColors, setSelectedColors] = useState<string>('');
     const [authorisation, setAuthorisation] = useState<string | null>(null);
-    
+    const [selectedTaskId, setSelectedTaskId] = useState(0); // État pour suivre la tâche sélectionnée
+    const [stepsValue, setStepsValue] = useState(0); // État pour suivre la tâche sélectionnée
+
+
     useEffect(() => {
         const auth = localStorage.getItem('authorisation');
         setAuthorisation(auth);
@@ -110,6 +114,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
     const openValidateModal = (id: number, steps:number,status:string,colors:string) => {
         
+        setStepsValue(steps);
         setStateSelecte(status);
         setSelectedColors(colors);
         setId(id);
@@ -169,7 +174,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
             if (TaskId) {
 
                 if(StateSelecte==="1"){
-                    const apiResponse = await validteTaskState(TaskId, StateSelecte, selectedColors);
+                    const apiResponse = await validteTaskState(TaskId, StateSelecte, selectedColors,id);
 
                     if (apiResponse && apiResponse.code === 200) {
                         if (id) {
@@ -181,6 +186,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                         }
 
                         if (apiResponse && apiResponse.code === 400) {
+                            toast.error("Erreur lors de la mise à jour de du status. Veuillez réessayer");
                             if (id) {
                                 toast.success(apiResponse.code);
                                 fetchProjectDetails(id);
@@ -192,10 +198,9 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
     
                     } else {
     
-                        toast.error("Erreur lors de la mise à jour de du status. Veuillez réessayer");
                     }
                 }else{
-                    const apiResponse = await changeTaskState(TaskId, StateSelecte, selectedColors);
+                    const apiResponse = await changeTaskState(TaskId, StateSelecte, selectedColors,id,stepsValue);
 
                     if (apiResponse && apiResponse.code === 200) {
                         if (id) {
@@ -208,6 +213,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
     
                     }
                     if (apiResponse && apiResponse.code === 400) {
+                        toast.error("Erreur lors de la mise à jour de du status. Veuillez réessayer");
+
                         if (id) {
                             toast.success(apiResponse.code);
                             fetchProjectDetails(id);
@@ -218,7 +225,6 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
     
                     } else {
     
-                        toast.error("Erreur lors de la mise à jour de du status. Veuillez réessayer");
                     }
                 }
 
@@ -359,6 +365,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
     const foundUserId = foundUser ? foundUser.user.userId : undefined;
 
     console.log(foundUserId);
+        // Effet pour définir la première tâche valide comme sélectionnée
+        useEffect(() => {
+            const firstValidTask = paginatedTasksTermines.find(task => task.isValides === 0);
+            if (firstValidTask) {
+                setSelectedTaskId(firstValidTask.projectId);
+            }
+        }, [paginatedTasksTermines]);
 
     return (
 
@@ -389,10 +402,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
                                         <div key={task.taskId} className='mb-3 p-3 bg-white rounded-md space-y-4'>
 
-                                            <div className='flex justify-between'>
-                                                <div>
-                                                    <a onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
-                                                        <h3 className="text-sm font-semibold">{task.taskName}</h3>
+                                            <div className='flex justify-between cursor-pointer hover:underline'>
+
+                                                <div onClick={() => {
+                                                    localStorage.setItem('selectedProjectCode', id!); // Ajoute taskCode au localStorage
+                                                    navigateTo(`/admin/tache/${task.taskCode}`); // Navigue vers la page
+                                                }}>
+                                                    <a className='cursor-pointer hover:underline' onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
+                                                        <h3 className="cursor-pointer hover:underline text-sm font-semibold">{task.taskName}</h3>
                                                     </a>
                                                 </div>
 
@@ -627,9 +644,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                 </div>
 
                             ) : (
-                                <div className="flex justify-center items-center h-32">
-                                    <p className="text-gray-500">Aucune tâche en cours pour ce projet.</p>
-                                </div>
+                                <NoteFound />
                             )}
 
                         </div>
@@ -662,9 +677,14 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                         <div key={task.taskId} className='mb-3 p-3 bg-white rounded-md space-y-4'>
 
                                             <div className='flex justify-between'>
-                                                <div>
-                                                    <a onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
-                                                        <h3 className="text-sm font-semibold">{task.taskName}</h3>
+
+                                                <div onClick={() => {
+                                                    localStorage.setItem('selectedProjectCode', id!); // Ajoute taskCode au localStorage
+                                                    navigateTo(`/admin/tache/${task.taskCode}`); // Navigue vers la page
+                                                }}>
+
+                                                    <a className='cursor-pointer hover:underline' onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
+                                                        <h3 className="cursor-pointer hover:underline text-sm font-semibold">{task.taskName}</h3>
                                                     </a>
                                                 </div>
 
@@ -870,9 +890,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
                                 </div>
                             ) : (
-                                <div className="flex justify-center items-center h-32">
-                                    <p className="text-gray-500">Aucune tâche en attente pour ce projet.</p>
-                                </div>
+
+                                <NoteFound />
                             )}
 
                         </div>
@@ -905,9 +924,13 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                         <div key={task.taskId} className='mb-3 p-3 bg-white rounded-md space-y-4'>
 
                                             <div className='flex justify-between'>
-                                                <div>
-                                                    <a onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
-                                                        <h3 className="text-sm font-semibold">{task.taskName}</h3>
+                                                
+                                                <div onClick={() => {
+                                                    localStorage.setItem('selectedProjectCode', id!); // Ajoute taskCode au localStorage
+                                                    navigateTo(`/admin/tache/${task.taskCode}`); // Navigue vers la page
+                                                }}>
+                                                    <a className='cursor-pointer hover:underline' onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
+                                                        <h3 className="cursor-pointer hover:underline text-sm font-semibold">{task.taskName}</h3>
                                                     </a>
                                                 </div>
 
@@ -1017,8 +1040,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                 </div>
 
                                                 <div>
-
-
+                                                    
+                                                {/* 
                                                     {task.isValides === 1 && (
                                                         <>
                                                             <div className="flex items-center">
@@ -1044,9 +1067,43 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                             </div>
                                         
                                                         </>
-                                                    )}
-                                                    
+                                                    )} */}
 
+                                                
+                                                    <div className="flex items-center">
+                                                        {task.isValides === 1 ? (
+                                                            <>
+                                                                <span className="inline-flex items-center justify-center w-6 h-6 me-2 text-sm font-semibold text-gray-800 bg-gray-100 rounded-full dark:bg-gray-700 dark:text-gray-300">
+                                                                    <svg width="25" height="24" viewBox="0 0 25 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M12.5 22C6.977 22 2.5 17.523 2.5 12C2.5 6.477 6.977 2 12.5 2C18.023 2 22.5 6.477 22.5 12C22.5 17.523 18.023 22 12.5 22ZM11.503 16L18.573 8.929L17.16 7.515L11.503 13.172L8.674 10.343L7.26 11.757L11.503 16Z" fill="#038C4C" />
+                                                                    </svg>
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <>
+                                                                <input
+                                                                    onClick={() => {
+                                                                        toggleDropdownActions(task.taskId);
+                                                                        setSelectedTaskId(task.taskId);
+                                                                    }}
+                                                                    id={`radio-${task.taskId}`}
+                                                                    type="radio"
+                                                                    name="value1"
+                                                                    className="w-3 h-3 hidden peer"
+                                                                    checked
+                                                                />
+                                                                <label htmlFor={`radio-${task.taskId}`}
+                                                                    className="relative flex items-center justify-center peer-checked:before:hidden before:block before:absolute before:w-full before:h-full before:bg-white w-5 h-5 cursor-pointer border-0 border-orange-500 rounded-full overflow-hidden"
+>
+                                                                    <svg width="25" height="24" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                        <path d="M10.5 20C4.977 20 0.5 15.523 0.5 10C0.5 4.477 4.977 0 10.5 0C16.023 0 20.5 4.477 20.5 10C20.5 15.523 16.023 20 10.5 20ZM9.503 14L16.573 6.929L15.16 5.515L9.503 11.172L6.674 8.343L5.26 9.757L9.503 14Z" fill="#F27F1B" />
+                                                                    </svg>
+                                                                </label>
+                                                            </>
+                                                        )}
+                                                    </div>
+
+                                                
                                                     <div className="relative inline-block text-left">
 
                                                         {openActionTaskId === task.taskId && (
@@ -1192,9 +1249,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
                                 </div>
                             ) : (
-                                <div className="flex justify-center items-center h-32">
-                                    <p className="text-gray-500">Aucune tâche terminées pour ce projet.</p>
-                                </div>
+                            <NoteFound />
+
                             )}
 
                         </div>

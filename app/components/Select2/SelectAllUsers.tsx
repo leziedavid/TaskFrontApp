@@ -83,7 +83,7 @@ const SelectAllUsers: React.FC<SelectAllUsersProps> = ({ setUsers,departementId 
     <>
       <Toaster position="top-right" reverseOrder={false} />
 
-      <div ref={selectRef} className="relative z-0 bg-white dark:bg-form-input">
+      <div ref={selectRef} className="relative z-10 bg-white dark:bg-form-input">
         <div
           onClick={handleToggleDropdown} className="w-full rounded border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark cursor-pointer">
           <div className="relative">

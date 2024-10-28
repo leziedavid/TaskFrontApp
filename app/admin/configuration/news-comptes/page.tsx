@@ -166,7 +166,7 @@ export default function Page() {
             <Toaster position="top-right" reverseOrder={false} />
 
             <div className="px-0 mx-auto max-w-7xl sm:px-6 md:px-8 mb-3">
-                <h1 className="text-2xl font-semibold text-gray-900">Ajouter un nouveau compte</h1>
+                <h1 className="text-2xl font-bold text-gray-900">Ajouter un nouveau compte</h1>
             </div>
 
             
