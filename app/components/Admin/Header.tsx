@@ -4,6 +4,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { Menu, Transition } from '@headlessui/react';
 import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon, MessageCircle as MessageIcon } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { getUnreadNotifications } from '@/app/services/NotifService';
+import { NotificationDTO } from '@/app/interfaces/Notification';
 
 
 
@@ -13,6 +15,39 @@ const Header: React.FC<{ setSidebarOpen: React.Dispatch<React.SetStateAction<boo
     const [notificationsOpen, setNotificationsOpen] = useState(false);
     const [usersName, setUsersName] = useState<string | null>(null);
     const [usersId, setUsersId] = useState<string | null>(null);
+
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [notifying, setNotifying] = useState(true);
+    const [response, setResponse] = useState<NotificationDTO[] | null>(null);
+    // const { id } = useParams<{ id: string }>();
+
+
+    const extractHour = (isoString: string): string => {
+        // Créez un objet Date à partir de la chaîne ISO
+        const date = new Date(isoString);
+
+        // Obtenez l'heure et les minutes en format 24h
+        const hours = date.getUTCHours().toString().padStart(2, '0');
+        const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+
+        // Retournez l'heure au format HH:mm
+        return `${hours}:${minutes}`;
+    };
+
+    const getNotifications = async () => {
+        try {
+            const resp = await getUnreadNotifications();
+            setResponse(resp.data)
+
+        } catch (error) {
+
+            console.error('Erreur lors de la récupération du message :', error);
+        }
+    };
+
+    useEffect(() => {
+        getNotifications();
+    }, []);
 
     const [notifications] = useState<string[]>([
         "Notification 1",
@@ -38,7 +73,7 @@ const Header: React.FC<{ setSidebarOpen: React.Dispatch<React.SetStateAction<boo
         },
         { name: 'Déconnexion', href: '#' },
     ];
-    
+
 
     // Fonction pour gérer la déconnexion
     const handleSignOut = () => {
@@ -61,7 +96,7 @@ const Header: React.FC<{ setSidebarOpen: React.Dispatch<React.SetStateAction<boo
         checkToken();
     }, [checkToken]);
 
-    
+
     return (
 
         <div className=" mb-5 sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white shadow">
@@ -69,7 +104,7 @@ const Header: React.FC<{ setSidebarOpen: React.Dispatch<React.SetStateAction<boo
                 <MenuIcon className="h-6 w-6" />
             </button>
             <div className="flex flex-1 justify-end px-4">
-                
+
                 <div className="ml-4 flex items-center md:ml-6">
 
                     {/* <button type="button" className="rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" >
@@ -95,13 +130,19 @@ const Header: React.FC<{ setSidebarOpen: React.Dispatch<React.SetStateAction<boo
                             leaveTo="transform opacity-0 scale-95"
                         >
                             <Menu.Items className="absolute right-0 z-10 mt-2 w-64 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                                {notifications.length > 0 ? (
-                                    notifications.map((notification, index) => (
+                                {response && response.length > 0 ? (
+                                    response.map((item, index) => (
                                         <Menu.Item key={index}>
                                             {({ active }) => (
                                                 <div className={`flex items-start px-4 py-3 text-sm ${active ? 'bg-gray-100' : ''} border-b border-gray-200`}>
                                                     <MessageIcon className="h-5 w-5 text-gray-500 mr-2 flex-shrink-0" />
-                                                    <span className="whitespace-normal break-words flex-1">{notification}</span>
+                                                    <span className="whitespace-normal break-words flex-1">
+                                                        <h6 className="text-sm font-medium text-black dark:text-white">
+                                                            {item.userAddBBy[0].firstname}  {item.userAddBBy[0].lastname}
+                                                        </h6>
+                                                        <p className="text-sm">{item.title} </p>
+                                                        <p className="text-xs"> {extractHour(item.createdAt)} min par {item.userAddBBy[0].firstname}  {item.userAddBBy[0].lastname}</p>
+                                                    </span>
                                                 </div>
                                             )}
                                         </Menu.Item>
