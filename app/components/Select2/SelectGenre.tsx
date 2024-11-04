@@ -35,11 +35,9 @@ interface SelectGenreProps {
           </svg>
         </span>
 
-        <select
-          value={selectedOption}
-          onChange={(e) => { changeGenre(e.target.value); changeTextColor(); }}
-          className={`relative z-20 w-full appearance-none rounded-sm border border-stroke bg-transparent py-2 pl-10 pr-10 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark dark:bg-form-input ${isOptionSelected ? 'text-black dark:text-white' : ''}`}>
-          <option value="" disabled className="text-body dark:text-bodydark">Genre</option>
+        <select value={selectedOption} onChange={(e) => { changeGenre(e.target.value); changeTextColor(); }}
+          className={`relative z-20 w-full text-slate-700 appearance-none rounded-sm border border-stroke bg-transparent py-2 pl-10 pr-10 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark dark:bg-form-input ${isOptionSelected ? 'text-slate-600 dark:text-white' : ''}`}>
+          <option value="" disabled className="text-sm  dark:text-bodydark">Genre</option>
           <option value="HOMME" className="text-body dark:text-bodydark">HOMME</option>
           <option value="FEMME" className="text-body dark:text-bodydark">FEMME</option>
         </select>

@@ -69,7 +69,7 @@ const AddObsModal: React.FC<AddObsModalProps> = ({
                 const response = await getUserIdFromToken(token);
                 if (response.code === 200 && response.data) {
                     setUserId(response.data);
-                    console.log(userId);
+                    // console.log(userId);
                 } else {
                     toast.error("Erreur lors de la récupération de l'ID utilisateur.");
                 }

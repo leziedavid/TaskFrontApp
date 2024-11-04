@@ -14,7 +14,7 @@ import SelectAllRoles from '@/app/components/Select2/SelectAllRoles';
 import SelectAllFonction from '@/app/components/Select2/SelectAllFonction';
 import SelectDepartment from '@/app/components/Select2/SelectDepartment';
 import SelectGenre from '@/app/components/Select2/SelectGenre';
-import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
+import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon, ArrowLeftIcon } from 'lucide-react';
 import Image from 'next/image';
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
@@ -165,20 +165,23 @@ export default function Page() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
-            <div className="px-0 mx-auto max-w-7xl sm:px-6 md:px-8 mb-3">
-                <h1 className="text-2xl font-bold text-gray-900">Ajouter un nouveau compte</h1>
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/configuration`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" /> {/* Flèche à gauche du texte */}
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Ajouter un nouveau compte</h1>
             </div>
-
-            
 
             <div className="rounded-sm border  bg-white px-5 pt-6 pb-2.5 shadow-default dark:bg-boxdark sm:px-7.5 xl:pb-1">
                 <div className=" mb-10 col-span-5 xl:col-span-3">
                     <div className="rounded-sm  bg-white shadow-default dark:bg-boxdark">
 
                 <div className="p-7">
+                    
                     <form>
 
-                        <div className="relative mb-8 flex items-center justify-center gap-3">
+                    <div className="mb-5 flex flex-col gap-5 sm:flex-row gap-4">
 
                             <div className="relative">
                                 <Image
@@ -201,7 +204,7 @@ export default function Page() {
 
                         {/* <div className="mb-5 col-span-5 xl:col-span-3"> */}
 
-                            <div className="mb-5 flex flex-col gap-5.5 sm:flex-row space-x-2">
+                        <div className="mb-5 flex flex-col gap-5 sm:flex-row gap-4">
 
                                 <div className=" mb-5 w-full sm:w-1/2">
                                     <div className="relative">

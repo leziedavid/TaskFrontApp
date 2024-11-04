@@ -78,7 +78,7 @@ export const getSettings = async (): Promise<BaseResponse<any>> => {
 
 export const sendOtp = async (email: string): Promise<BaseResponse<any>> => {
     try {
-        const response = await fetch(`${getBaseUrl()}/otp`, {
+        const response = await fetch(`${getBaseUrl()}/sendOtp`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ email }),
@@ -109,3 +109,22 @@ export const resetPassword = async (newPassword: string): Promise<BaseResponse<a
         throw error;
     }
 };
+
+
+export const updatePassword = async (id: number | string, newPassword: string): Promise<void> => {
+    const response = await fetch(`${getBaseUrl()}/auth/${id}/password`, {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ newPassword }),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Erreur lors de la mise à jour du mot de passe");
+    }
+
+    return await response.json(); // Vous pouvez retourner les données si nécessaire
+};
+

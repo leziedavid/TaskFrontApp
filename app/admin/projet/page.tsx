@@ -11,7 +11,6 @@ import SelectDepartment from '@/app/components/Select2/SelectDepartment';
 import SelectAllUsers from '@/app/components/Select2/SelectAllUsers';
 import PercentageSelect from '@/app/components/Select2/PercentageSelect';
 
-import Image from 'next/image';
 import DataNotFound from '@/app/components/error/DataNotFound';
 import { getAllProjects, getFilteredProjects, projectsStatistics } from '@/app/services/ProjectService';
 import { getProjectState } from '@/app/services/getStatistique';

@@ -75,8 +75,8 @@ const SelectDepartment: React.FC<SelectDepartmentProps> = ({ setDepartment, depa
     <>
       <Toaster position="top-right" reverseOrder={false} />
 
-      <div ref={selectRef} className="relative z-10 bg-white dark:bg-form-input">
-        <div onClick={handleToggleDropdown} className="w-full rounded-sm border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark cursor-pointer">
+      <div ref={selectRef} className="relative z-40 bg-white dark:bg-form-input">
+        <div onClick={handleToggleDropdown} className=" text-slate-700 w-full rounded-sm border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark cursor-pointer">
           <div className="flex items-center justify-between">
             <span className={`truncate ${selectedOption ? 'text-black dark:text-white' : ''}`}>
               {selectedOption ? selectedOption.departmentName : 'Sélectionnez un departement'}

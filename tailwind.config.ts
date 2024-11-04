@@ -14,7 +14,13 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       fontFamily: {
-        inter: ['Inter', 'sans-serif'], // Ajoute ici
+        Poppins: ['Poppins', 'sans-serif'], // Ajoute ici
+        // inter: ['Inter', 'sans-serif'], // Ajoute ici
+      },
+
+      colors: {
+        background: '#ffffff', // Couleur de fond par défaut
+        text: '#000000', // Couleur de texte par défaut
       },
     },
   },

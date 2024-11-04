@@ -79,7 +79,7 @@ const SelectAllFonction: React.FC<SelectAllFonctionProps> = ({ setFonctions,fonc
 
             <div ref={selectRef} className="relative z-10 bg-white dark:bg-form-input">
 
-                <div onClick={handleToggleDropdown} className="w-full rounded border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark cursor-pointer">
+                <div onClick={handleToggleDropdown} className="text-slate-700 w-full rounded border border-stroke bg-transparent py-2 px-5 outline-none transition focus:border-[#03233F] active:border-[#03233F] dark:border-form-strokedark cursor-pointer">
                     <div className="relative">
                         <div className="flex items-center justify-between">
 

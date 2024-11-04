@@ -17,6 +17,7 @@ import { changeTaskPriority, changeTaskState, deleteTask, validteTaskState } fro
 import AddTaskAlerteModal from '../Modal/AddTaskAlerteModal';
 import { getUserIdFromToken } from '../../services/ApiService';
 import NoteFound from '../error/NoteFound';
+import SkillBar from '../Select2/SkillBar';
 
 interface TaskCardProps {
     tasksEnCours : Task[];
@@ -586,7 +587,8 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                 </div>
 
                                                 <div className="relative inline-block text-xs">
-                                                {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
+
+                                                    {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
                                                         <button onClick={() => toggleDropdownPropriete(task.taskId)} type="button" className={`inline-flex items-center pl-1 pr-1 py-1 text-[9px] font-medium text-center text-gray-900 bg-white  `} aria-haspopup="true" aria-expanded={openPropriete === task.taskId ? 'true' : 'false'} style={{ position: 'relative', backgroundColor: `${task.prioColor}20`, color: task.prioColor }} >
                                                             <span className={`text-[${task.prioColor}] whitespace-nowrap`}> {task.taskPriority} </span>
                                                             <svg width="13" height="13" viewBox="0 0 24 25" xmlns="http://www.w3.org/2000/svg">
@@ -601,6 +603,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                     }
 
                                                     {/* Dropdown menu */}
+
                                                     {openPropriete === task.taskId && (
                                                         <div className={`z-50 origin-top-left absolute right-0 mt-2 w-40 px-5 rounded-lg shadow-lg bg-white divide-y divide-gray-100 dark:bg-gray-700 dark:divide-gray-600`} role="menu" aria-orientation="vertical" aria-labelledby="dropdownMenuIconButton">
                                                             <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
@@ -614,9 +617,16 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                             </ul>
                                                         </div>
                                                     )}
+
                                                 </div>
                                                 
                                             </div>
+
+                                            <SkillBar
+                                                level={+task?.difficulte || 0}
+                                                color={+task?.difficulte === 0 || task?.level === null ? "#038C4C" : "#FF0000"}
+                                                Completed={'Difficulté'}
+                                            />
 
                                         </div>
 
@@ -865,6 +875,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                 
                                             </div>
 
+                                            <SkillBar
+                                                level={+task?.difficulte || 0}
+                                                color={+task?.difficulte === 0 || task?.level === null ? "#038C4C" : "#FF0000"}
+                                                Completed={'Difficulté'}
+                                            />
+
                                         </div>
 
                                     ))}
@@ -925,8 +941,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
                                             <div className='flex justify-between'>
                                                 
-                                                <div onClick={() => {
-                                                    localStorage.setItem('selectedProjectCode', id!); // Ajoute taskCode au localStorage
+                                                <div onClick={() => { localStorage.setItem('selectedProjectCode', id!); // Ajoute taskCode au localStorage
                                                     navigateTo(`/admin/tache/${task.taskCode}`); // Navigue vers la page
                                                 }}>
                                                     <a className='cursor-pointer hover:underline' onClick={() => navigateTo(`/admin/tache/${task.taskCode}`)} >
@@ -1041,7 +1056,7 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
 
                                                 <div>
                                                     
-                                                {/* 
+                                                {/*
                                                     {task.isValides === 1 && (
                                                         <>
                                                             <div className="flex items-center">
@@ -1224,6 +1239,12 @@ const TaskCard: React.FC<TaskCardProps> = ({ tasksEnCours,tasksEnAttente,tasksTe
                                                 </div>
 
                                             </div>
+
+                                            <SkillBar
+                                                level={+task?.difficulte || 0}
+                                                color={+task?.difficulte === 0 || task?.level === null ? "#038C4C" : "#FF0000"}
+                                                Completed={'Difficulté'}
+                                            />
 
                                         </div>
 

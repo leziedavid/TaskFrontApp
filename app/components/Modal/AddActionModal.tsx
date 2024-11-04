@@ -105,7 +105,7 @@ const AddActionModal: React.FC<AddActionModalProps> = ({
     
     // Exemple d'utilisation
     const diff = calculateDaysDifference("25/10/2024 12:19", "26/10/2024 15:45");
-    console.log(diff); // Affiche 2
+    // console.log(diff); // Affiche 2
     
     
     const fetchUserId = async () => {

@@ -4,20 +4,19 @@ import React from 'react';
 interface SkillProps {
     level: number; // Niveau de compétence entre 0 et 100
     color: string; // Couleur de base de la barre de progression (classe Tailwind)
+    Completed: string; // Couleur de base de la barre de progression (classe Tailwind)
 }
 
 // Composant de la barre de compétence
-const SkillBar: React.FC<SkillProps> = ({ level, color }) => {
+const SkillBar: React.FC<SkillProps> = ({ level, color,Completed }) => {
     // Calculer la largeur de la barre en pourcentage
     const barWidth = `${level}%`;
 
     // Fonction pour ajuster la couleur en fonction du niveau
     const getColor = (level: number, baseColor: string): string => {
-        // Si le niveau est à 100%, retourner la couleur spécifique
         if (level >= 100) {
             return '#012340'; // Couleur spécifique lorsque le niveau est à 100%
         } else {
-            // Calculer la saturation en fonction du niveau pour la couleur de base
             const hslRegex = /hsl\((\d+),\s*([\d.]+)%,\s*([\d.]+)%\)/;
             const match = baseColor.match(hslRegex);
             if (match) {
@@ -33,14 +32,14 @@ const SkillBar: React.FC<SkillProps> = ({ level, color }) => {
     };
 
     return (
-        <div className="">
-            <div className="h-1 bg-[#EDEDED] rounded-full">
-                <div className="h-full rounded-full"
-                    style={{
-                        width: barWidth,
-                        backgroundColor: getColor(level, color)
-                    }}
-                />
+        <div className="flex w-full h-2 bg-[#EDEDED] overflow-hidden font-sans rounded-full bg-blue-gray-50">
+            <div className="flex items-center justify-center h-full text-white text-xs break-all rounded-full"
+                style={{
+                    width: barWidth,
+                    backgroundColor: getColor(level, color),
+                }}
+            >
+                <span className="text-[0.55rem]">{level}% {Completed}</span> {/* Réduire la taille du texte ici */}
             </div>
         </div>
     );

@@ -31,7 +31,7 @@ const UserListeModal: React.FC<UserListeModalProps> = ({isOpen,  onClose, title,
             };
             setResponse(apiResponse.data);
         } catch (error) {
-            console.error('Error fetching project details:', error);
+            // console.error('Error fetching project details:', error);
         }
     };
 

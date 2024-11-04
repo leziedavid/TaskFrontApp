@@ -251,7 +251,7 @@ export const getProjectDetails = async (projectCode: string) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching project details:', error);
+        // console.error('Error fetching project details:', error);
         throw error;
     }
 };
@@ -266,7 +266,7 @@ export const getProjectUsers = async (projectCode: string) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching project details:', error);
+        // console.error('Error fetching project details:', error);
         throw error;
     }
 };
@@ -280,7 +280,7 @@ export const getProjectUsersById = async (id: number) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching project details:', error);
+        // console.error('Error fetching project details:', error);
         throw error;
     }
 };
@@ -295,7 +295,7 @@ export const getProjectByCodes = async (projectCode: string) => {
 
         return await response.json();
     } catch (error) {
-        console.error('Error fetching project details:', error);
+        // console.error('Error fetching project details:', error);
         throw error;
     }
 };

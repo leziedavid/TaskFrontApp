@@ -296,6 +296,29 @@ export const getFilteredTasks = async (
     }
 };
 
+
+export const addDifficulty = async (id:string,level: number, difficulte: string): Promise<BaseResponse<any>> => {
+    try {
+        const response = await fetch(`${getBaseUrl()}/tasks/${id}/difficulty`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ level, difficulte }),
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de l\'ajout de la difficulté');
+        }
+
+        const data: BaseResponse<any> = await response.json();
+        return data; // Renvoie les données de la réponse
+    } catch (error) {
+        console.error('Erreur dans addDifficulty:', error);
+        throw error; // Relève l'erreur pour la gérer plus haut
+    }
+};
+
 // /tasks/update/
 
 

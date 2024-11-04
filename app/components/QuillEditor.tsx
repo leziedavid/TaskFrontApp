@@ -1,8 +1,8 @@
 "use client";
 
 import React, { useRef, useEffect } from 'react';
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css'; // styles Quill
+import ReactQuill from 'react-quill-new';
+import 'react-quill-new/dist/quill.snow.css'; // styles Quill
 
 interface QuillEditorProps {
     value: string;
@@ -25,8 +25,7 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
             ['bold', 'italic', 'underline', 'strike', 'blockquote'],
             [{ 'list': 'ordered' }, { 'list': 'bullet' },
             { 'indent': '-1' }, { 'indent': '+1' }],
-            // ['link', 'image', 'video'],
-            ['clean']
+            ['clean'],
         ],
     };
 
@@ -34,12 +33,11 @@ const QuillEditor: React.FC<QuillEditorProps> = ({ value, onChange }) => {
         'header', 'font', 'size',
         'bold', 'italic', 'underline', 'strike', 'blockquote',
         'list', 'bullet', 'indent',
-        'link', 'image', 'video'
+        'link', 'image', 'video',
     ];
 
     return (
         <ReactQuill
-        
             ref={quillRef}
             theme="snow"
             value={value}

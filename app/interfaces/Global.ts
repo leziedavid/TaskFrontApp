@@ -82,6 +82,7 @@ export interface FileData {
 }
 
 export interface Task {
+
     isValides: number;
     taskId: number;
     taskCode: string;
@@ -102,6 +103,8 @@ export interface Task {
     project: Project;
     taskNombreHeurs: string;
     taskNombreJours: string;
+    difficulte: string;
+    level: number;
     user: User;
 }
 

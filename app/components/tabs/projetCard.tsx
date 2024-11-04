@@ -396,12 +396,12 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                             </div>
                                         </div>
 
-                                        <p className='mb-2'>
+                                        <div className='mb-2'>
 
                                             <div className="flex justify-between items-center mb-2">
                                                 {/* Div à gauche */}
                                                 <div className="flex items-center">
-                                                    <h3 className="pl-0 text-[14px] md:text-[15px] font-semibold text-black dark:text-white">{project.progress} %</h3>
+                                                    {/* <h3 className="pl-0 text-[14px] md:text-[15px] font-semibold text-black dark:text-white">{project.progress} %</h3> */}
                                                 </div>
 
                                                 <div className="flex pl-3 md:pl-10 lg:pl-20 xl:pl-30 cursor-pointer hover:underline">
@@ -410,9 +410,8 @@ const ProjetCard: React.FC<ProjectProps> = ({ response, fetchProjects }) => {
                                                 </div>
                                                 
                                             </div>
-
-                                            <SkillBar level={project.progress} color="#038C4C" />
-                                        </p>
+                                            <SkillBar level={project.progress} color="#038C4C"  Completed={'Completed'} />
+                                        </div>
 
                                         <div className="flex items-center">
 

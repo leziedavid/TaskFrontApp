@@ -279,10 +279,6 @@ export default function Page() {
                 <div className=" mb-10 col-span-5 xl:col-span-3">
 
                     <div className="rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
-
-                        {/* <div className="border-b border-stroke py-4 px-7 dark:border-strokedark">
-                            <h1 className="text-2xl font-semibold text-gray-900">NOUVEAU PROJET</h1>
-                        </div> */}
                         
                         <div className="p-7">
 

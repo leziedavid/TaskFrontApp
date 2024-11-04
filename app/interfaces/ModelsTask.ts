@@ -83,10 +83,23 @@ export interface UserDTO {
     usersUpdatedAt: Date;
 }
 
+// Interface pour l'abonnement
+export interface AbonnementDTO {
+    abonnementId: number;
+    idTask: number;
+    email: string;
+    name: string;
+    userIds: number[] | null; // Supposant que cela pourrait être un tableau d'IDs ou null
+    createdAt: string | null; // ISO date string ou null
+    userId: number;
+}
+
+
 // Interface pour les détails de la tâche
 export interface TaskDetailsDTO {
     tasks: TaskDTO[];
     actions: ActionDTO[];
     observations: ObservationDTO[];
     assignedUsers: UserDTO[]; // Nouvelle propriété pour les utilisateurs assignés
+    abonnements: AbonnementDTO[]; // Nouvelle propriété pour les utilisateurs assignés
 }

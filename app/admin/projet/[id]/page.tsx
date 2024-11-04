@@ -3,7 +3,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { ArrowDown, ArrowLeftIcon, CheckCircle, Clock, X } from 'lucide-react';
-import Image from 'next/image';
+// import Image from 'next/image';
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
 import { Task,ProjectsDetails } from '@/app/interfaces/Global';
 import { useRouter,useParams } from 'next/navigation';
@@ -382,12 +382,13 @@ export default function Page() {
                                             <hr className="border-gray-900 my-6" />
 
                                             <div>
-                                                <p className="mb-1.5 font-medium text-black dark:text-white">Temps restant :</p>
-                                                <h4 className="mb-2 text-xl font-bold text-black dark:text-white">{response?.projects?.projectNombreJours ?? ""} jours</h4>
+                                                <span className="mb-1.5 font-medium text-black dark:text-white">Temps restant :</span>
+                                                <h4 className="mb-2 text-lg font-bold text-black dark:text-white">{response?.projects?.projectNombreJours ?? ""} jours</h4>
 
-                                            <p className="mb-1.5 font-medium text-black dark:text-white">Progression:{response?.projects?.progress} </p>
+                                                <span className="mb-1.5 font-medium text-black dark:text-white">Progression:{response?.projects?.progress}% </span>
                                                 <div>
-                                                    <SkillBar level={response?.projects?.progress ?? 0 } color="#038C4C" />{response?.projects?.progress ?? ""} %
+                                                    <SkillBar level={response?.projects?.progress ?? 0} color="#038C4C" Completed={' Completed'} />
+                                                    {/* {response?.projects?.progress ?? ""} % */}
                                                 </div>
 
                                             </div>
@@ -434,9 +435,9 @@ export default function Page() {
 
                                         <div className={`p-4 ${activeTab === 'styled-steps' ? 'block' : 'hidden'} rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-steps" role="tabpanel" aria-labelledby="steps-tab">
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
                                                 <ProjectStep fetchProjectDetails={fetchProjectDetails} id={id} />
-                                            </p>
+                                            </div>
 
                                         </div>
 
@@ -444,7 +445,7 @@ export default function Page() {
 
                                             {/* Tableau des utilisateur: */}
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
 
                                                 <div className="flex justify-end gap-4.5">
                                                     {authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
@@ -537,13 +538,13 @@ export default function Page() {
                                                     </table>
                                                 </div>
 
-                                            </p>
+                                            </div>
 
                                         </div>
 
                                         <div className={`p-4 ${activeTab === 'styled-dashboard' ? 'block' : 'hidden'} rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
 
                                                 <div className=" items-center  p-4  sm:p-6 xl:p-10">
                                                     {response && response.projects.filesData.length > 0 ? (
@@ -620,16 +621,15 @@ export default function Page() {
                                                     )}
                                                 </div>
 
-                                            </p>
+                                            </div>
 
                                         </div>
 
                                         <div className={`p-4 ${activeTab === 'styled-settings' ? 'block' : 'hidden'} rounded-lg bg-gray-50 dark:bg-gray-800`} id="styled-settings" role="tabpanel" aria-labelledby="settings-tab">
 
-                                            <p className="text-sm text-gray-500 dark:text-gray-400">
+                                            <div className="text-sm text-gray-500 dark:text-gray-400">
 
-
-                                            </p>
+                                            </div>
 
                                         </div>
 
@@ -638,11 +638,11 @@ export default function Page() {
 
                                 </div>
 
-                                <div className="flex justify-center items-center mt-3">
+                                {/* <div className="flex justify-center items-center mt-3">
                                     <div className="rounded-full bg-white p-2 drop-shadow-sm border-2 border-orange-400">
                                         <ArrowDown className="h-5 w-5" />
                                     </div>
-                                </div>
+                                </div> */}
 
                             </div>
                             

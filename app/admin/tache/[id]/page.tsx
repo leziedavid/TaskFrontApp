@@ -2,7 +2,7 @@
 "use client";
 
 import { BaseResponse } from '@/app/interfaces/ApiResponse';
-import { fetchTaskDetails } from '@/app/services/TaskService';
+import { addDifficulty, fetchTaskDetails } from '@/app/services/TaskService';
 import { ArrowDown, ArrowLeftIcon, Clock } from 'lucide-react';
 import { useParams, useRouter } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
@@ -21,13 +21,15 @@ import { formatDate } from '@/app/services/DateUtils';
 import ToggleSwitch from '@/app/components/ToggleSwitch/ToggleSwitch';
 import DataNotFound from '@/app/components/error/DataNotFound';
 import NoteFound from '@/app/components/error/NoteFound';
+import SelectAllUsers from '@/app/components/Select2/SelectAllUsers';
+import { addUsersToTask } from '@/app/services/UsersService';
 
 
 interface ApiResulte {
     code: number;
     data: string;
     message: string;
-    }
+}
 
 
 export default function Page() {
@@ -50,11 +52,12 @@ export default function Page() {
     const [isdisabled, setIsdisabled] = useState(false);
     const [isShow, setIsShow] = useState(false);
     const [taskId, setTaskId] = useState(Number);
+    const [selcetTasckId, setSelcetTasckId] = useState(Number);
     const [actionId, setActionId] = useState(Number);
     const [obsId, setObsId] = useState(Number);
     const [otherUser, setOtherUser] = useState(Number);
     const [isUser, setIsUser] = useState(Number);
-    
+
     const [actionMessage, setActionMessage] = useState('');
     const [onDeleteMessage, setOnDeleteMessage] = useState('');
 
@@ -68,6 +71,16 @@ export default function Page() {
     const [isModalOpenActions, setIsModalOpenActions] = useState(false);
 
     const [authorisation, setAuthorisation] = useState<string | null>(null);
+    const [isToggleChecked, setIsToggleChecked] = useState(false);
+    const [difficultyPercentage, setDifficultyPercentage] = useState('');
+
+    const [isUserToggleChecked, setUserToggleChecked] = useState(false);
+    const [users, setUsers] = useState([]); // État pour stocker les utilisateurs sélectionnés
+    const [Allusers, setAllUsers] = useState<number[]>([]);
+    const [departments, setDepartment] = useState("");
+    const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+
     useEffect(() => {
         const auth = localStorage.getItem('authorisation');
         setAuthorisation(auth);
@@ -91,7 +104,7 @@ export default function Page() {
         setActionMessage('Êtes-vous sûr de vouloir supprimer cette observation ?');
         setOnDeleteMessage('OUI, SUPPRIMER');
     };
-    
+
     const openActionSup = (idActions: number,) => {
         setIspenActionSup(true);
         setActionId(idActions);
@@ -218,7 +231,11 @@ export default function Page() {
         try {
             const apiResponse = await fetchTaskDetails(code);
             setResponse(apiResponse.data);
+            setTaskId(apiResponse.data.tasks[0].taskId);
             setOtherUser(apiResponse.data.assignedUsers[0].userId);
+            setDifficultyPercentage(apiResponse.data.tasks[0].difficulte)
+            setIsToggleChecked(apiResponse.data.tasks[0].level)
+            console.log(apiResponse.data.tasks[0].taskId);
 
         } catch (error) {
             console.error('Error fetching project details:', error);
@@ -231,9 +248,6 @@ export default function Page() {
     }, [id]);
 
 
-    const handleIconClick = (iconName: string) => {
-        alert(`${iconName} icon clicked!`); // Remplacez par l'action souhaitée
-    };
 
     // Fonction octetsEnMB ajustée
     const octetsEnMB = (tailleEnOctets: number): string => {
@@ -297,9 +311,57 @@ export default function Page() {
             handleDeleteAction();
             setObsId(0);
         }
-        if(obsId > 0) {
+        if (obsId > 0) {
             handleDeleteObs();
             setActionId(0);
+        }
+    };
+
+
+    const handleToggleChange = () => {
+        setIsToggleChecked(prev => !prev);
+        // Réinitialiser le pourcentage si décoché
+        if (isToggleChecked) {
+            setDifficultyPercentage('');
+        }
+    };
+
+    const handleAddDifficulty = async () => {
+        const level = isToggleChecked ? 1 : 0; // 1 si coché, 0 sinon
+        setIsButtonDisabled(true);
+        try {
+
+            const data = await addDifficulty(id!,level,difficultyPercentage);
+            console.log('Difficulté ajoutée:', data);
+            toast.success('Difficulté ajoutée');
+            setDifficultyPercentage('');
+            fetchTaskDetail(id!);
+            setIsButtonDisabled(false);
+            
+        } catch (error) {
+            console.error('Erreur:', error);
+            setIsButtonDisabled(false);
+        }
+    };
+
+
+    const handleUserToggleChange = () => {
+        setUserToggleChecked(prev => !prev);
+    };
+
+    const handleAddUsers = async () => {
+        setIsButtonDisabled(true);
+        try {
+
+            const data = await addUsersToTask(taskId, Allusers);
+            toast.success('Utilisateurs ajoutés');
+            setAllUsers([]);
+            fetchTaskDetail(id!);
+            setIsButtonDisabled(false);
+
+        } catch (error) {
+            console.error('Erreur lors de l\'ajout des utilisateurs');
+            setIsButtonDisabled(false);
         }
     };
 
@@ -313,14 +375,14 @@ export default function Page() {
                     <ArrowLeftIcon className="mr-2" />
                     Retour
                 </a>
-                <h1 className="ml-4 font-bold">Détail sur la tâche</h1>
+                <h1 className="ml-4 font-bold">Détail sur la tâche </h1>
             </div>
 
             <div className="min-h-full">
-                
+
                 <main className="py-10 px-2">
 
-                    <div className="mt-8 grid grid-cols-1 gap-6  lg:grid-cols-2 mb-8">
+                    <div className="mt-2 grid grid-cols-1 gap-6  lg:grid-cols-2 mb-4">
 
                         <div className="space-y-6">
 
@@ -333,9 +395,9 @@ export default function Page() {
 
                                     <div className="border-t border-gray-200 px-4 py-5 sm:px-6">
 
-                                    {response ? (
+                                        {response ? (
 
-                                        <div className="mb-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark px-4 pb-4">
+                                            <div className="mb-10 rounded-sm border border-stroke bg-white shadow-default dark:border-strokedark dark:bg-boxdark px-4 pb-4">
 
                                                 <section className="bg-white dark:bg-gray-900">
 
@@ -347,7 +409,7 @@ export default function Page() {
                                                         </div>
 
 
-                                                        <label className="mb-4 block text-lg font-medium text-black dark:text-white">DETAILS</label>
+                                                        <label className="mb-4 block text-lg font-medium text-black dark:text-white">DETAILS </label>
                                                         <hr className="border-gray-900 my-6" />
 
                                                         <div className="relative mb-3">
@@ -443,19 +505,91 @@ export default function Page() {
                                                         </div>
 
                                                         <div className="mb-5">
-                                                            <label className="mb-2.5 block text-black dark:text-white">Nombre de jour</label>
+                                                            <label className="mb-2.5 block text-black dark:text-white">Nombre de jour </label>
                                                             <input disabled value={response.tasks[0]?.taskNombreJours} className=" bg-white text-sm w-full rounded-lg border border-stroke py-2 px-4 text-black " />
+                                                        </div>
+
+                                                        <div className="p-4 border rounded shadow-md bg-white mb-5">
+                                                            <div className="flex items-center">
+                                                                <ToggleSwitch isChecked={isToggleChecked} onChange={handleToggleChange}  className="mr-3" />
+                                                                <span className="text-gray-700">Pourcentage de difficulté {difficultyPercentage} % </span>
+                                                            </div>
+                                                            {isToggleChecked && (
+                                                                <div className="mt-4">
+                                                                    <label htmlFor="difficultyPercentage" className="block mb-2 text-sm font-medium text-gray-700"> Pourcentage de difficulté :
+                                                                    </label>
+                                                                    <input
+                                                                        id="difficultyPercentage"
+                                                                        type="number"
+                                                                        value={difficultyPercentage}
+                                                                        onChange={(e) => setDifficultyPercentage(e.target.value)}
+                                                                        placeholder="Entrez un pourcentage difficulté (50%)"
+                                                                        className="border rounded p-2 w-full rounded-sm border border-stroke py-2 pl-8 pr-4 text-black focus:border-black focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-black"
+                                                                    />
+                                                                    <button onClick={handleAddDifficulty} className={`bg-[#012340] mt-4 mb-2 px-4 py-2 text-white rounded ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                                        disabled={isButtonDisabled} >
+                                                                        Sauvegarder
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                        </div>
+
+                                                        <label className="mb-2.5 block text-black dark:text-white">Liste des abonnées à la tâche</label>
+
+
+                                                        {response && response.abonnements.length > 0 ? (
+                                                            <div className="flex flex-wrap gap-2">
+                                                                {response.abonnements.map((items, index) => (
+                                                                    <span key={index} id="badge-dismiss-green"
+                                                                        className="inline-flex items-center px-2 py-1 text-sm font-medium text-green-800 bg-green-100 rounded dark:bg-green-900 dark:text-green-300">
+                                                                        {items.name}
+                                                                        <button type="button"
+                                                                            className="inline-flex items-center p-1 ms-2 text-sm text-green-400 bg-transparent rounded-sm hover:bg-green-200 hover:text-green-900 dark:hover:bg-green-800 dark:hover:text-green-300"
+                                                                            data-dismiss-target="#badge-dismiss-green" aria-label="Remove">
+                                                                            <svg className="w-2 h-2" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                                                                                <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                                                                                    d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6" />
+                                                                            </svg>
+                                                                            <span className="sr-only">Remove badge</span>
+                                                                        </button>
+                                                                    </span>
+                                                                ))}
+                                                            </div>
+                                                        ) : (
+                                                            <span></span>
+                                                        )}
+
+                                                        <div className="p-4 border rounded shadow-md bg-white mt-6">
+                                                            <div className="flex items-center">
+                                                                <ToggleSwitch
+                                                                    isChecked={isUserToggleChecked}
+                                                                    onChange={handleUserToggleChange}
+                                                                    className="mr-3"
+                                                                />
+                                                                <span className="text-gray-700">
+                                                                    Ajouter des utilisateurs à la tâche
+                                                                </span>
+                                                            </div>
+                                                            {isUserToggleChecked && (
+                                                                <div className="mt-4">
+                                                                    <SelectAllUsers setUsers={setAllUsers} departementId={departments ? parseInt(departments) : undefined} />
+                                                                    <button onClick={handleAddUsers} className={`bg-[#012340] mt-4 mb-2 px-4 py-2 text-white rounded ${isButtonDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                                                        disabled={isButtonDisabled} >
+                                                                        Sauvegarder les utilisateurs
+                                                                    </button>
+                                                                </div>
+                                                            )}
                                                         </div>
 
                                                     </div>
 
                                                 </section>
 
-                                        </div>
+                                            </div>
 
                                         ) : (
-                                        
-                                        <NoteFound />
+
+                                            <NoteFound />
                                         )}
 
                                     </div>
@@ -472,8 +606,6 @@ export default function Page() {
                                 <h2 id="timeline-title" className="uppercase mb-4 <text-lg font-medium text-gray-900 flex items-center gap-2 upercase">
                                     <Clock /> Options sur la tâche
                                 </h2>
-
-
 
                                 {otherUser && isUser && otherUser == isUser || authorisation === 'ADMIN' || authorisation === 'MANAGER' || authorisation === 'GLOBAL_ADMIN' ? (
 
@@ -524,21 +656,21 @@ export default function Page() {
                                                         </div>
 
                                                         <div className="overflow-x-auto">
-                                                        {response && response.observations.length > 0 ? (
+                                                            {response && response.observations.length > 0 ? (
 
-                                                            <table className="font-inter whitespace-nowrap uppercase  w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
+                                                                <table className="font-inter whitespace-nowrap uppercase  w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
 
-                                                                <thead className="w-full rounded-lg bg-[#ffffff] text-base font-semibold text-white">
-                                                                    <tr>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-[15px] font-bold text-[#212B36]">Libelle</th>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-[15px] font-bold text-[#212B36]">Description</th>
-                                                                        <th className="whitespace-nowrap py-3 text-[15px] font-bold text-[#212B36]">Action</th>
-                                                                    </tr>
-                                                                </thead>
+                                                                    <thead className="w-full rounded-lg bg-[#ffffff] text-base font-semibold text-white">
+                                                                        <tr>
+                                                                            <th className="whitespace-nowrap py-3 px-3 text-[15px] font-bold text-[#212B36]">Libelle</th>
+                                                                            <th className="whitespace-nowrap py-3 px-3 text-[15px] font-bold text-[#212B36]">Description</th>
+                                                                            <th className="whitespace-nowrap py-3 text-[15px] font-bold text-[#212B36]">Action</th>
+                                                                        </tr>
+                                                                    </thead>
 
-                                                                <tbody>
-                                                            
-                                                                {response.observations.map((obs, index) => (
+                                                                    <tbody>
+
+                                                                        {response.observations.map((obs, index) => (
 
                                                                             <tr key={obs.observationId} className="cursor-pointer bg-white drop-shadow-sm hover:shadow-lg">
                                                                                 <td className="whitespace-nowrap py-3 text-[#000000] px-3 text-[15px] font-normal">{obs.libelle}</td>
@@ -547,7 +679,7 @@ export default function Page() {
                                                                                         <span className="mr-2">
                                                                                             <DateConverter dateStr={obs.observationCreatedAt} /> -
                                                                                         </span>
-                                                                                        <div  dangerouslySetInnerHTML={{ __html: truncateDescription(obs.description) }} />
+                                                                                        <div dangerouslySetInnerHTML={{ __html: truncateDescription(obs.description) }} />
                                                                                     </div>
                                                                                 </td>
 
@@ -569,11 +701,11 @@ export default function Page() {
                                                                                     </button>
                                                                                 </td>
                                                                             </tr>
-                                                                ))}
+                                                                        ))}
 
 
-                                                                </tbody>
-                                                            </table>
+                                                                    </tbody>
+                                                                </table>
 
 
                                                             ) : (
@@ -621,18 +753,18 @@ export default function Page() {
 
                                                         <div className="overflow-x-auto">
 
-                                                        {response && response.actions.length > 0 ? (
+                                                            {response && response.actions.length > 0 ? (
 
-                                                            <table className="uppercase font-inter w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
-                                                                <thead className="whitespace-nowrap uppercase w-full rounded-lg bg-[#ffffff] text-base font-semibold text-white">
-                                                                    <tr>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Date et Heures de debut</th>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Libelle</th>
-                                                                        <th className="whitespace-nowrap py-3 px-3 text-[13px] text-[#212B36]">Status</th>
-                                                                        <th className="whitespace-nowrap py-3 text-[13px] text-[#212B36] ">Action</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
+                                                                <table className="uppercase font-inter w-full table-auto border-separate border-spacing-y-1 overflow-scroll text-left md:overflow-auto">
+                                                                    <thead className="whitespace-nowrap uppercase w-full rounded-lg bg-[#ffffff] text-base font-semibold text-white">
+                                                                        <tr>
+                                                                            <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Date et Heures de debut</th>
+                                                                            <th className="whitespace-nowrap py-3 px-3 text-[13px]  text-[#212B36]">Libelle</th>
+                                                                            <th className="whitespace-nowrap py-3 px-3 text-[13px] text-[#212B36]">Status</th>
+                                                                            <th className="whitespace-nowrap py-3 text-[13px] text-[#212B36] ">Action</th>
+                                                                        </tr>
+                                                                    </thead>
+                                                                    <tbody>
 
                                                                         {response.actions.map((action, index) => (
 
@@ -669,12 +801,12 @@ export default function Page() {
                                                                             </tr>
                                                                         ))}
 
-                                                                </tbody>
-                                                            </table>
+                                                                    </tbody>
+                                                                </table>
 
-                                                                ) : (
-                                                                    <NoteFound />
-                                                                )}
+                                                            ) : (
+                                                                <NoteFound />
+                                                            )}
                                                         </div>
 
                                                         {response && response.actions.length > 0 ? (
@@ -706,9 +838,9 @@ export default function Page() {
                                 </div>
 
                             </div>
-                            
+
                         </section>
-                        
+
 
                     </div>
 
@@ -781,6 +913,6 @@ export default function Page() {
             />
 
         </>
-        
+
     )
 }

@@ -232,12 +232,12 @@ const AddLeaveModal: React.FC<AddLeaveModalProps> = ({
                         <div className="space-x-4 flex items-center justify-end p-5">
                                 <>
                                     {!isdisabled ? (
-                                        <button onClick={saveLeave} type="button" className="py-2.5 px-5 text-sm font-medium text-white bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                                        <button onClick={saveLeave} type="button" className="py-2.5 px-5 text-sm font-medium text-white bg-[#012340] rounded-lg border border-gray-200  focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
                                             {leaveId ? onDeleteMessage : "Sauvegarder"}
                                         </button>
                                     ) : (
                                         <button type="button"
-                                            className="py-2.5 px-5 text-sm font-medium text-white bg-[#012340] rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-white focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >
+                                            className="py-2.5 px-5 text-sm font-medium text-white bg-[#012340] rounded-lg border border-gray-200 focus:outline-none focus:ring-4 focus:ring-gray-100 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700" >
                                             {onDeleteMessage}
                                         </button>
                                     )}

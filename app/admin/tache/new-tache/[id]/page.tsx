@@ -14,6 +14,7 @@ import SelectOneUsers from '@/app/components/Select2/SelectOneUsers';
 import { ArrowLeftIcon } from 'lucide-react';
 import dynamic from 'next/dynamic';
 const QuillEditor = dynamic(() => import('@/app/components/QuillEditor'), {ssr: false,});
+import DateConverter from '@/app/components/DateConverter';
 
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
@@ -60,6 +61,10 @@ export default function Page() {
     const [response, setResponse] = useState<BaseResponse<Donnees> | null>(null);
 
     const [userId, setUserId] = useState<number | null>(null);
+
+    const [alertMessage, setAlertMessage] = useState('');
+    const [isAlertVisible, setIsAlertVisible] = useState(false);
+
     const fetchUserId = async () => {
 
         try {
@@ -245,8 +250,17 @@ export default function Page() {
     
         return totalHours;
     };
-    
 
+    useEffect(() => {
+        // Récupérer les dates du localStorage
+        const projectStartDate = localStorage.getItem('projectStartDate');
+        const projectEndDate = localStorage.getItem('projectEndDate');
+
+        setAlertMessage(`Vous ne pouvez créer des tâches uniquement entre l'intervalle du `);
+        setIsAlertVisible(true);
+
+    }, []);
+    
 
     return (
         <>
@@ -260,7 +274,35 @@ export default function Page() {
                 <h1 className="ml-4 font-bold">Ajouter une nouvelle tâche</h1>
             </div>
 
+
             <div className="rounded-sm bg-white px-5 pt-6 pb-2.5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
+                <div>
+                    {isAlertVisible && (
+                        <div className="flex items-center p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                            <svg className="flex-shrink-0 inline w-4 h-4 me-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5ZM9.5 4a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM12 15H8a1 1 0 0 1 0-2h1v-3H8a1 1 0 0 1 0-2h2a1 1 0 0 1 1 1v4h1a1 1 0 0 1 0 2Z" />
+                            </svg>
+                            <span className="sr-only">Info</span>
+                            <div>
+                                <span className="font-medium">Alert!  &nbsp;</span>
+                                {alertMessage}
+                                {localStorage.getItem('projectStartDate') && (
+                                    <DateConverter dateStr={localStorage.getItem('projectStartDate')!} />
+                                )}
+                                &nbsp;au  &nbsp; {/* Ajout d'espace entre les deux */}
+                                {localStorage.getItem('projectEndDate') && (
+                                    <DateConverter dateStr={localStorage.getItem('projectEndDate')!} />
+                                )}.
+                                {/* <span className="ml-2">Vous ne pouvez créer de tâches qu'entre ces deux dates dans l'intervalle.</span> */}
+                            </div>
+                        </div>
+                    )}
+                    {/* Ajoute ici ton formulaire pour créer une tâche */}
+                </div>
+
+
+
+
                 <div className=" mb-10 col-span-5 xl:col-span-3">
                     <div className="rounded-sm  bg-white shadow-default dark:border-strokedark dark:bg-boxdark">
 

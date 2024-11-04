@@ -10,6 +10,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation';
 import jwt from 'jsonwebtoken';
 import OtpInput from '../components/Input/OtpInput';
+import Link from 'next/link';
 
 
 interface DecodedToken {
@@ -46,6 +47,9 @@ export default function Page() {
     const [otpToken, setOtpToken] = useState<string | null>(null);
     const [isLoading, setIsLoading] = useState(false);
     const [countdown, setCountdown] = useState<number | null>(null);
+    const [isEmailButtonDisabled, setIsEmailButtonDisabled] = useState(false);
+    const [isOtpButtonDisabled, setIsOtpButtonDisabled] = useState(false);
+    const [isPasswordButtonDisabled, setIsPasswordButtonDisabled] = useState(false);
 
 
     const { register: registerEmail, handleSubmit: handleEmailSubmit, formState: { errors: emailErrors } } = useForm<EmailFormValues>({
@@ -93,19 +97,31 @@ export default function Page() {
 
 
     const onEmailSubmit = async (data: EmailFormValues) => {
+        setIsEmailButtonDisabled(true); // Désactiver le bouton
+
         try {
             const apiResponse = await sendOtp(data.email);
+
             if (apiResponse.code === 200) {
-                setOtpToken(apiResponse.data.token);
-                localStorage.setItem('otpToken', apiResponse.data.token);
+
+                setOtpToken(apiResponse.data.otp);
+                localStorage.setItem('otpToken', apiResponse.data.otp);
                 setStage('otp');
-                startCountdown(apiResponse.data.token); // Démarrer le décompte
-                toast.success('OTP envoyé ! Vérifiez votre email.');
-            } else {
-                toast.error(apiResponse.messages!);
+                toast.success(apiResponse.messages!);
+                startCountdown(apiResponse.data.otp); // Démarrer le décompte
+                // toast.success('OTP envoyé ! Vérifiez votre email.');
+                setIsEmailButtonDisabled(false); // Réactiver le bouton
+
             }
+            
+            // else {
+            //     toast.error(apiResponse.messages!);
+            //     setIsEmailButtonDisabled(false); // Réactiver le bouton
+            // }
+
         } catch (error) {
-            toast.error("Erreur lors de l'envoi de l'OTP.");
+            // toast.error("Erreur lors de l'envoi de l'OTP.");
+            setIsEmailButtonDisabled(false); // Réactiver le bouton
         }
     };
 
@@ -119,16 +135,16 @@ export default function Page() {
     const onOtpSubmits2 = async (data: OtpFormValues) => {
         console.log('OTP soumis:', data); // Ajoute ceci pour vérifier l'appel
         const otp = data.otp;
-    
+
         const decodedToken = jwt.decode(otpToken!) as any;
         const isExpired = decodedToken.exp * 1000 < Date.now();
-    
+
         if (isExpired) {
             toast.error("Le token a expiré. Veuillez ressaisir votre email.");
             setStage('email');
             return;
         }
-    
+
         if (otp === decodedToken.otp) {
             toast.success("Token vérifié avec succès !");
             setStage('reset');
@@ -138,12 +154,13 @@ export default function Page() {
     };
 
     const onOtpSubmit = async () => {
-        
-        const otp = otpDigits.join('');
-        
+        setIsOtpButtonDisabled(true); // Désactiver le bouton
+        const otp = otpDigits.join(''); // Récupérer l'OTP entré par l'utilisateur
+
         // Validation simple
         if (otp.length !== 4) {
             toast.error("L'OTP doit faire 4 chiffres.");
+            setIsOtpButtonDisabled(false); // Réactiver le bouton
             return;
         }
 
@@ -153,33 +170,17 @@ export default function Page() {
             console.log('OTP soumis:', otp);
 
             // Vérifiez que otpToken est valide
-            const otpTokens = localStorage.getItem('otpToken');
-            if (!otpTokens) {
+            const otpToken = localStorage.getItem('otpToken');
+            if (!otpToken) {
                 toast.error("Token OTP manquant. Veuillez ressaisir votre email.");
                 setStage('email');
                 return;
             }
 
-            const decodedToken = jwt.decode(otpTokens) as DecodedToken; // Utiliser l'interface
-
-            console.log('decoded Token:', decodedToken);
-            // Vérifiez si le token a une propriété exp
-            if (!decodedToken || typeof decodedToken.exp !== 'number') {
-                toast.error("Token OTP invalide.");
-                setStage('email');
-                return;
-            }
-
-            const isExpired = decodedToken.exp * 1000 < Date.now();
-
-            if (isExpired) {
-                toast.error("Le token a expiré. Veuillez ressaisir votre email.");
-                setStage('email');
-                return;
-            }
+            console.log('Token stocké:', otpToken);
 
             // Vérifiez si l'OTP correspond
-            if (otp === decodedToken.otp) {
+            if (otp === otpToken) {
                 toast.success("Token vérifié avec succès !");
                 setStage('reset');
             } else {
@@ -192,9 +193,11 @@ export default function Page() {
             toast.error("Une erreur s'est produite lors de la vérification.");
         } finally {
             setIsLoading(false); // Arrêter le chargement
+            setIsOtpButtonDisabled(false); // Réactiver le bouton
         }
     };
     
+
     const [otpDigits, setOtpDigits] = useState(['', '', '', '']);
     const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
@@ -210,13 +213,16 @@ export default function Page() {
         }
     };
     const onPasswordSubmit = async (data: PasswordFormValues) => {
+        setIsPasswordButtonDisabled(true); // Désactiver le bouton
         try {
             const apiResponse = await resetPassword(data.password);
             if (apiResponse.code === 200) {
                 toast.success("Mot de passe modifié avec succès !");
+                setIsPasswordButtonDisabled(false);
                 router.push('/login');
             } else {
                 toast.error(apiResponse.messages!);
+                setIsPasswordButtonDisabled(false);
             }
         } catch (error) {
             toast.error("Erreur lors de la modification du mot de passe.");
@@ -229,7 +235,7 @@ export default function Page() {
             <div className="flex min-h-full h-screen">
 
                 <div className="relative hidden w-0 flex-1 lg:block">
-                    <Image  className="absolute inset-0 h-full w-full brightness-50" src="/img/bg.jpeg" alt="" fill style={{ objectFit: 'cover' }} />
+                    <Image className="absolute inset-0 h-full w-full brightness-50" src="/img/bg.jpeg" alt="" fill style={{ objectFit: 'cover' }} />
                 </div>
 
                 <div className="flex flex-1 flex-col justify-center py-0 px-6 sm:px-6 lg:flex-none lg:px-20 xl:px-24">
@@ -250,7 +256,13 @@ export default function Page() {
                                         />
                                         {emailErrors.email && <p>{emailErrors.email.message}</p>}
                                     </div>
-                                    <button className="flex w-full justify-center rounded-md border border-transparent bg-[#03233F] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-[#03233F] focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" type="submit">Vérifier l&apos;email</button>
+                                    {/* {isEmailButtonDisabled} */}
+                                    <button
+                                        className={`flex w-full justify-center rounded-md border border-transparent ${isEmailButtonDisabled ? 'bg-gray-200' : 'bg-[#03233F]'} py-2 px-4 text-sm font-medium text-white shadow-sm  focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2`}
+                                        type="submit" disabled={isEmailButtonDisabled} >
+                                        Vérifier l&apos;email
+                                    </button>
+                                    {/* <button className="flex w-full justify-center rounded-md border border-transparent bg-[#03233F] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-[#03233F] focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" type="submit">Vérifier l&apos;email</button> */}
                                 </form>
                             )}
 
@@ -303,9 +315,24 @@ export default function Page() {
                                         />
                                         {passwordErrors.confirmerPassword && <p>{passwordErrors.confirmerPassword.message}</p>}
                                     </div>
-                                    <button className="flex w-full justify-center rounded-md border border-transparent bg-[#03233F] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-[#03233F] focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" type="submit">Modifier le mot de passe</button>
+
+                                    <button
+                                        className={`flex w-full justify-center rounded-md border border-transparent ${isPasswordButtonDisabled ? 'bg-gray-200' : 'bg-[#03233F]'} py-2 px-4 text-sm font-medium text-white shadow-sm focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2`}
+                                        type="submit"
+                                        disabled={isPasswordButtonDisabled}
+                                    >
+                                        Modifier le mot de passe
+                                    </button>
+
+                                    {/* <button className="flex w-full justify-center rounded-md border border-transparent bg-[#03233F] py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-[#03233F] focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2" type="submit">Modifier le mot de passe</button> */}
                                 </form>
+
+
                             )}
+
+                            <div className="text-sm mt-5">
+                                <Link href="/" className="font-medium text-black hover:text-black"> <span className=" text-blue-500 px-1">Se connecter</span> </Link>
+                            </div>
 
                         </div>
                     </div>

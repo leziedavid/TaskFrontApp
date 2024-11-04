@@ -20,7 +20,7 @@ const NoteFound: React.FC = () => {
                             alt="Loading"
                             width={180} // Correspond à h-12
                             height={180} // Correspond à w-12
-                            className="animate-pulse"
+                            // className="animate-pulse"
                         />
                         <div className="text-center text-lg font-bold">Aucune données</div>
                     </div>

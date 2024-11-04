@@ -142,3 +142,33 @@ export const deleteUser = async (id: number) => {
         throw error;
     }
 };
+interface User {
+    id: number; // ou string, selon la structure de ton utilisateur
+    // Ajoute d'autres propriétés si nécessaire
+}
+
+export const addUsersToTask = async (taskId: number | undefined, users: number[]): Promise<any> => {
+    if (taskId === undefined) {
+        throw new Error('L\'ID de la tâche est requis.');
+    }
+
+    try {
+        const response = await fetch(`${getBaseUrl()}/abonnements/${taskId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userIds: users }), // Envoie un objet avec userIds
+        });
+
+        if (!response.ok) {
+            throw new Error('Erreur lors de l\'ajout des utilisateurs');
+        }
+
+        const data = await response.json();
+        return data; // Retourne les données de la réponse
+    } catch (error) {
+        console.error('Erreur:', error);
+        throw error; // Relève l'erreur pour qu'elle puisse être gérée dans le composant
+    }
+};

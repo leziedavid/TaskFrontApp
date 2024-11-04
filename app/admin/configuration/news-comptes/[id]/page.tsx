@@ -14,7 +14,7 @@ import SelectAllRoles from '@/app/components/Select2/SelectAllRoles';
 import SelectAllFonction from '@/app/components/Select2/SelectAllFonction';
 import SelectDepartment from '@/app/components/Select2/SelectDepartment';
 import SelectGenre from '@/app/components/Select2/SelectGenre';
-import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon } from 'lucide-react';
+import { Bell as BellIcon, User as UserIcon, Menu as MenuIcon, ArrowLeftIcon } from 'lucide-react';
 import Image from 'next/image';
 
 const PAGE_SIZE = 8; // Nombre de trajets par page
@@ -211,8 +211,13 @@ export default function Page() {
         <>
             <Toaster position="top-right" reverseOrder={false} />
 
-            <div className="px-0 mx-auto max-w-7xl sm:px-6 md:px-8 mb-3">
-                <h1 className="text-2xl font-bold text-gray-900">Modifier les informations du compte</h1>
+            
+            <div className="bg-gray-300 p-4 flex items-center">
+                <a onClick={() => navigateTo(`/admin/configuration`)} className="flex items-center text-black font-bold cursor-pointer hover:underline">
+                    <ArrowLeftIcon className="mr-2" /> {/* Flèche à gauche du texte */}
+                    Retour
+                </a>
+                <h1 className="ml-4 font-bold">Modifier les informations du compte</h1>
             </div>
 
             <div className="mx-auto max-w-7xl px-0 sm:px-6 md:px-8 py-2">
@@ -416,7 +421,7 @@ export default function Page() {
                         </button>
 
                         <button onClick={update} className="flex justify-center rounded bg-[#012340] py-2 px-4 font-medium text-white hover:bg-opacity-90" type="button" >
-                            Ajouter
+                            Modifier
                         </button>
 
                     </div>

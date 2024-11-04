@@ -9,7 +9,7 @@ import { updateUsersTask } from '../../services/TaskService';
 import {TaskDTO } from '../../interfaces/ModelsTask';
 import { ActionDTO } from '@/app/interfaces/ActionDTO';
 import { TaskDataCalendar } from '../../interfaces/CalendarsData';
-import taskImages from '../../images/task-01.jpg';
+// import taskImages from '../../images/task-01.jpg';
 import DateConverter from '../DateConverter';
 
 type DetailCalendarModallProps = {
