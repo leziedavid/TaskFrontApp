@@ -20,7 +20,7 @@
     "jwt-decode": "^4.0.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.428.0",
-    "next": "^15.0.2",
+    "next": "file:",
     "punycode": "^2.3.1",
     "quill": "^2.0.2",
     "react": "^18.3.1",
